@@ -8,12 +8,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">MN Squared</a>
+            <a class="navbar-brand" href="/mn2">MN Squared</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">Home</a></li>
-                <li><a href="/settings">Settings</a></li>
+                <li><a href="${pageContext.request.contextPath}/mn2">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/mn2/settings">Settings</a></li>
             </ul>
             <form class="navbar-form navbar-right">
                 <input type="text" class="form-control" placeholder="Search...">

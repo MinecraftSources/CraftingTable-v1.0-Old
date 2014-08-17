@@ -1,5 +1,7 @@
 package com.rmb938.mn2.docker.servlets;
 
+import com.rmb938.mn2.docker.DatabaseResource;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,12 +16,17 @@ import java.io.IOException;
 public class BungeeTypesServlet extends HttpServlet {
 
     @Override
+    public void init() throws ServletException {
+        super.init();
+        DatabaseResource.initDatabase();
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
         req.setAttribute("partial", "bungeetypes-view");
         requestDispatcher.forward(req, resp);
-        System.out.println("Servlet");
     }
 
 }
