@@ -1,11 +1,15 @@
 package com.rmb938.mn2.docker;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@WebServlet(
+        name = "MN2DockerTomcat",
+        urlPatterns = {"/"})
 public class MN2DockerTomcat extends HttpServlet {
 
     @Override

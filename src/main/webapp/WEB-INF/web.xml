@@ -4,14 +4,5 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
-    <servlet>
-        <servlet-name>MN2DockerTomcat</servlet-name>
-        <servlet-class>com.rmb938.mn2.docker.MN2DockerTomcat</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>MN2DockerTomcat</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
 
 </web-app>
