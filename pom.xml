@@ -51,6 +51,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.rmb938.mn2.docker:MN2Database:*</include>
+                                    <include>org.json:json:*</include>
 
                                     <!-- Docker-Java -->
 
@@ -98,6 +99,11 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java</artifactId>
             <version>0.10.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
         </dependency>
     </dependencies>
 

@@ -10,6 +10,16 @@
     <link rel="stylesheet" href="/stylesheets/footer.css">
     <link rel="stylesheet" href="/stylesheets/template.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script><!-- load jquery -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+
+    <%
+        String javascript = (String) request.getAttribute("javascript");
+        if (javascript != null) {
+    %>
+    <script src="${pageContext.request.contextPath}/javascript/<%=javascript %>.js"></script>
+    <%
+        }
+    %>
 </head>

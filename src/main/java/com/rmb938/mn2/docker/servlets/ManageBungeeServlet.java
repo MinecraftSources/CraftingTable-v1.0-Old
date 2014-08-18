@@ -30,6 +30,7 @@ public class ManageBungeeServlet extends HttpServlet {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
         req.setAttribute("partial", "bungee-view");
+        req.setAttribute("javascript", "manageBungee");
 
         String error = null;
 
@@ -100,17 +101,6 @@ public class ManageBungeeServlet extends HttpServlet {
             error = "Bungee not found";
         }
 
-        if (error != null) {
-            resp.setStatus(404);
-            resp.setContentType("text/html");
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
-            req.setAttribute("partial", "bungee-view");
 
-            req.setAttribute("error", error);
-
-            requestDispatcher.forward(req, resp);
-        } else {
-            resp.sendRedirect("/mn2");
-        }
     }
 }
