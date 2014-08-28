@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html lang="en" ng-app="dashboard">
+<html lang="en">
     <jsp:include page="header.jsp" />
     <body>
     <jsp:include page="top-navbar.jsp" />

@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "BungeeTypesServlet",
-        urlPatterns = {"/mn2/bungeetype/list", "/mn2/bungeetype/edit", "/mn2/bungeetype/add"})
+        name = "ServerTypesServlet",
+        urlPatterns = {"/mn2/servertype/list", "/mn2/servertype/edit", "/mn2/servertype/add"})
 @Log4j2
-public class BungeeTypesServlet extends HttpServlet {
+public class ServerTypesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
@@ -31,17 +31,17 @@ public class BungeeTypesServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
 
         if (req.getRequestURI().endsWith("list")) {
-            req.setAttribute("partial", "bungeetypes-view");
-            req.setAttribute("bungeetypes", DatabaseResource.getBungeeTypeLoader().getTypes());
+            req.setAttribute("partial", "servertypes-view");
+            req.setAttribute("servertypes", DatabaseResource.getServerTypeLoader().getTypes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
-            req.setAttribute("partial", "bungeetype-view");
-            req.setAttribute("javascript", "bungeeType");
+            req.setAttribute("partial", "servertype-view");
+            req.setAttribute("javascript", "serverType");
             req.setAttribute("action", "Edit");
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("add")) {
-            req.setAttribute("partial", "bungeetype-view");
-            req.setAttribute("javascript", "bungeeType");
+            req.setAttribute("partial", "servertype-view");
+            req.setAttribute("javascript", "serverType");
             req.setAttribute("action", "Add");
             requestDispatcher.forward(req, resp);
         }

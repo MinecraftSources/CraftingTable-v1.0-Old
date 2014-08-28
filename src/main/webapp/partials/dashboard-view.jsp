@@ -1,6 +1,6 @@
+<%@ page import="com.rmb938.mn2.docker.db.entity.MN2Bungee" %>
 <%@ page import="com.rmb938.mn2.docker.db.entity.MN2Server" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.rmb938.mn2.docker.db.entity.MN2Bungee" %>
 <h1 class="page-header">Dashboard</h1>
 
 <div class="row stats">
@@ -33,14 +33,16 @@
         </tr>
         </thead>
         <tbody>
-
         <%
 
             ArrayList<MN2Bungee> bungees = (ArrayList<MN2Bungee>) request.getAttribute("bungees");
 
             for (MN2Bungee bungee : bungees) {
-                if (bungee.getLastUpdate() >= System.currentTimeMillis()-60000) {
+                if (bungee.getLastUpdate() == 0) {
+                    continue;
+                }
         %>
+        <tr>
         <%
                     if (bungee.getBungeeType() != null) {
         %>
@@ -53,10 +55,12 @@
         <%
                     }
         %>
-                     <td><a href="${pageContext.request.contextPath}/mn2/bungee/manage?bungee=<%=bungee.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
-                            <span class="glyphicon glyphicon glyphicon-pencil"></span></button></a></td>
+        <td><a href="${pageContext.request.contextPath}/mn2/bungee/manage?id=<%=bungee.get_id().toString() %>">
+            <button type="button" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
+        </a></td>
+        </tr>
         <%
-                }
             }
         %>
         </tbody>
@@ -83,7 +87,9 @@
             ArrayList<MN2Server> servers = (ArrayList<MN2Server>) request.getAttribute("servers");
 
             for (MN2Server server : servers) {
-                if (server.getLastUpdate() >= System.currentTimeMillis()-60000) {
+                if (server.getLastUpdate() == 0) {
+                    continue;
+                }
         %>
         <tr>
                     <td><%=server.getNumber() %></td>
@@ -100,11 +106,12 @@
             <%
                         }
             %>
-                    <td><button type="button" class="btn btn-default btn-xs">
-                        <span class="glyphicon glyphicon glyphicon-pencil"></span></button></td>
+            <td><a href="${pageContext.request.contextPath}/mn2/server/manage?id=<%=server.get_id().toString() %>">
+                <button type="button" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
+            </a></td>
         </tr>
         <%
-                }
             }
         %>
         </tbody>

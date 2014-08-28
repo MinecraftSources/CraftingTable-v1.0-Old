@@ -5,32 +5,37 @@ import com.rabbitmq.client.Address;
 import com.rmb938.mn2.docker.db.database.*;
 import com.rmb938.mn2.docker.db.mongo.MongoDatabase;
 import com.rmb938.mn2.docker.db.rabbitmq.RabbitMQ;
+import lombok.Getter;
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log
+@Log4j2
 public class DatabaseResource {
 
     private static DatabaseResource databaseResource;
+
+    @Getter
     private static NodeLoader nodeLoader;
+
+    @Getter
     private static BungeeLoader bungeeLoader;
+
+    @Getter
+    private static BungeeTypeLoader bungeeTypeLoader;
+
+    @Getter
+    private static ServerTypeLoader serverTypeLoader;
+
+    @Getter
     private static ServerLoader serverLoader;
 
-    public static ServerLoader getServerLoader() {
-        return serverLoader;
-    }
-
-    public static BungeeLoader getBungeeLoader() {
-        return bungeeLoader;
-    }
-
-    public static NodeLoader getNodeLoader() {
-        return nodeLoader;
-    }
+    @Getter
+    private static PluginLoader pluginLoader;
 
     public static void initDatabase() {
         if (databaseResource == null) {
@@ -42,7 +47,7 @@ public class DatabaseResource {
         String hosts = System.getenv("MONGO_HOSTS");
 
         if (hosts == null) {
-            log.severe("MONGO_HOSTS is not set.");
+            log.error("MONGO_HOSTS is not set.");
             return;
         }
         List<ServerAddress> mongoAddresses = new ArrayList<ServerAddress>();
@@ -53,12 +58,12 @@ public class DatabaseResource {
                 mongoAddresses.add(new ServerAddress(info[0], Integer.parseInt(info[1])));
                 log.info("Added Mongo Address " + host);
             } catch (UnknownHostException e) {
-                log.severe("Invalid Mongo Address " + host);
+                log.error("Invalid Mongo Address " + host);
             }
         }
 
         if (mongoAddresses.isEmpty()) {
-            log.severe("No valid mongo addresses");
+            log.error("No valid mongo addresses");
             return;
         }
         log.info("Setting up mongo database mn2");
@@ -73,13 +78,14 @@ public class DatabaseResource {
             String[] info = host.split(":");
             try {
                 rabbitAddresses.add(new Address(info[0], Integer.parseInt(info[1])));
+                log.info("Added RabbitMQ Address "+host);
             } catch (Exception e) {
-                log.severe("Invalid RabbitMQ Address " + host);
+                log.error("Invalid RabbitMQ Address " + host);
             }
         }
 
         if (rabbitAddresses.isEmpty()) {
-            log.severe("No valid RabbitMQ addresses");
+            log.error("No valid RabbitMQ addresses");
             return;
         }
 
@@ -91,10 +97,10 @@ public class DatabaseResource {
             e.printStackTrace();
         }
 
-        PluginLoader pluginLoader = new PluginLoader(mongoDatabase);
+        pluginLoader = new PluginLoader(mongoDatabase);
         WorldLoader worldLoader = new WorldLoader(mongoDatabase);
-        ServerTypeLoader serverTypeLoader = new ServerTypeLoader(mongoDatabase, pluginLoader, worldLoader);
-        BungeeTypeLoader bungeeTypeLoader = new BungeeTypeLoader(mongoDatabase, pluginLoader, serverTypeLoader);
+        serverTypeLoader = new ServerTypeLoader(mongoDatabase, pluginLoader, worldLoader);
+        bungeeTypeLoader = new BungeeTypeLoader(mongoDatabase, pluginLoader, serverTypeLoader);
         nodeLoader = new NodeLoader(mongoDatabase, bungeeTypeLoader);
         bungeeLoader = new BungeeLoader(mongoDatabase, bungeeTypeLoader, nodeLoader);
         serverLoader = new ServerLoader(mongoDatabase, nodeLoader, serverTypeLoader);

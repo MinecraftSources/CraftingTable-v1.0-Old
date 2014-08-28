@@ -5,6 +5,7 @@ import com.rmb938.mn2.docker.db.entity.MN2Bungee;
 import com.rmb938.mn2.docker.db.entity.MN2Node;
 import com.rmb938.mn2.docker.db.entity.MN2Server;
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 @WebServlet(
         name = "DashboardServlet",
         urlPatterns = {"/mn2"})
-@Log
+@Log4j2
 public class DashboardServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
         super.init();
         DatabaseResource.initDatabase();
+        log.info("Init "+this.getServletName());
     }
 
     @Override
@@ -46,8 +48,8 @@ public class DashboardServlet extends HttpServlet {
 
         req.setAttribute("maxMemory", maxMemory);
 
-        int onlineNodes = nodes.size();
-        int totalNodes = DatabaseResource.getNodeLoader().getOnlineNodes().size();
+        int totalNodes = nodes.size();
+        int onlineNodes = DatabaseResource.getNodeLoader().getOnlineNodes().size();
 
         req.setAttribute("onlineNodes", onlineNodes);
         req.setAttribute("totalNodes", totalNodes);
