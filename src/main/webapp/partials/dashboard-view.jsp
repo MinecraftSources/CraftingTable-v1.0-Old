@@ -48,10 +48,18 @@
         %>
                         <td><%=bungee.getBungeeType().getName() %></td>
         <%
+                    } else {
+        %>
+                        <td>NULL</td>
+        <%
                     }
                     if (bungee.getNode() != null) {
         %>
                         <td><%=bungee.getNode().getAddress() %></td>
+        <%
+                    } else {
+        %>
+                         <td>NULL</td>
         <%
                     }
         %>
@@ -91,9 +99,19 @@
                     continue;
                 }
         %>
-        <tr>
+                <tr>
                     <td><%=server.getNumber() %></td>
+            <%
+                if (server.getServerType() != null) {
+            %>
                     <td><%=server.getServerType().getName() %></td>
+            <%
+                } else {
+            %>
+                    <td>NULL</td>
+            <%
+                }
+            %>
                     <td><%=server.getPlayers().size() %></td>
             <%
                         if (server.getNode() != null) {
@@ -102,15 +120,15 @@
             <%
                         } else {
             %>
-                            <td>:<%=server.getPort() %></td>
+                            <td>NULL:<%=server.getPort() %></td>
             <%
                         }
             %>
-            <td><a href="${pageContext.request.contextPath}/mn2/server/manage?id=<%=server.get_id().toString() %>">
-                <button type="button" class="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
-            </a></td>
-        </tr>
+                    <td><a href="${pageContext.request.contextPath}/mn2/server/manage?id=<%=server.get_id().toString() %>">
+                        <button type="button" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
+                    </a></td>
+                </tr>
         <%
             }
         %>

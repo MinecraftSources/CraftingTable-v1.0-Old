@@ -22,7 +22,7 @@ public class BungeeServlet extends APIServlet {
 
     @Override
     public JSONObject getJSON(HttpServletRequest req, HttpServletResponse resp) {
-        JSONObject jsonObject = super.putJSON(req, resp);
+        JSONObject jsonObject = super.getJSON(req, resp);
 
         String id = req.getParameter("id");
 

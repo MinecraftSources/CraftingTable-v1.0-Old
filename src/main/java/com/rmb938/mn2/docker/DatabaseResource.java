@@ -37,6 +37,9 @@ public class DatabaseResource {
     @Getter
     private static PluginLoader pluginLoader;
 
+    @Getter
+    private static WorldLoader worldLoader;
+
     public static void initDatabase() {
         if (databaseResource == null) {
             databaseResource = new DatabaseResource();
@@ -98,7 +101,7 @@ public class DatabaseResource {
         }
 
         pluginLoader = new PluginLoader(mongoDatabase);
-        WorldLoader worldLoader = new WorldLoader(mongoDatabase);
+        worldLoader = new WorldLoader(mongoDatabase);
         serverTypeLoader = new ServerTypeLoader(mongoDatabase, pluginLoader, worldLoader);
         bungeeTypeLoader = new BungeeTypeLoader(mongoDatabase, pluginLoader, serverTypeLoader);
         nodeLoader = new NodeLoader(mongoDatabase, bungeeTypeLoader);

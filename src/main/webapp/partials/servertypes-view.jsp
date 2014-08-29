@@ -1,6 +1,6 @@
 <%@ page import="com.rmb938.mn2.docker.db.entity.MN2ServerType" %>
 <%@ page import="java.util.ArrayList" %>
-<<h1 class="page-header">Server Types</h1>
+<h1 class="page-header">Server Types</h1>
 
 <div>
     <a href="${pageContext.request.contextPath}/mn2/servertype/add"><button type="button" class="btn btn-primary btn-lg">

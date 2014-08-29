@@ -1,10 +1,7 @@
 package com.rmb938.mn2.docker.servlets.api;
 
 import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
-import com.rmb938.mn2.docker.db.entity.MN2Server;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
+import com.rmb938.mn2.docker.db.entity.*;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
@@ -26,7 +23,7 @@ public class BungeeTypeServlet extends APIServlet {
 
     @Override
     public JSONObject getJSON(HttpServletRequest req, HttpServletResponse resp) {
-        JSONObject jsonObject = super.putJSON(req, resp);
+        JSONObject jsonObject = super.getJSON(req, resp);
 
         if (req.getRequestURI().endsWith("one")) {
             String id = req.getParameter("id");
@@ -36,7 +33,7 @@ public class BungeeTypeServlet extends APIServlet {
 
                 if (bungeeType == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown Bungee "+id);
+                    jsonObject.put("error", "Unknown Bungee Type "+id);
                     return jsonObject;
                 }
 
@@ -68,22 +65,22 @@ public class BungeeTypeServlet extends APIServlet {
                     plugins.put(pluginJSON);
                 }
                 jsonObject.put("plugins", plugins);
+                return jsonObject;
             } catch (Exception ex) {
                 resp.setStatus(400);
                 jsonObject.put("error", "Invalid Bungee ID " + id);
+                return jsonObject;
             }
         } else {
             resp.setStatus(405);
-            jsonObject.put("error", "Bungee Method Not allowed");
+            jsonObject.put("error", "Bungee Type Method Not allowed");
             return jsonObject;
         }
-
-        return jsonObject;
     }
 
     @Override
     public JSONObject postJSON(HttpServletRequest req, HttpServletResponse resp) {
-        JSONObject jsonObject = super.putJSON(req, resp);
+        JSONObject jsonObject = super.postJSON(req, resp);
 
         if (req.getRequestURI().endsWith("add")) {
             try {
@@ -154,7 +151,7 @@ public class BungeeTypeServlet extends APIServlet {
             }
         } else {
             resp.setStatus(405);
-            jsonObject.put("error", "Bungee Method Not allowed");
+            jsonObject.put("error", "Bungee Type Method Not allowed");
             return jsonObject;
         }
     }
@@ -196,6 +193,11 @@ public class BungeeTypeServlet extends APIServlet {
                     }
                     bungeeType.getServerTypes().add(serverType);
                     if (object.getBoolean("isDefault")) {
+                        if (bungeeType.getDefaultType() != null) {
+                            resp.setStatus(400);
+                            jsonObject.put("error", "Bungee Type already has a default server type "+bungeeType.getDefaultType().getName());
+                            return jsonObject;
+                        }
                         bungeeType.setDefaultType(serverType);
                     }
                 }
@@ -241,7 +243,7 @@ public class BungeeTypeServlet extends APIServlet {
             }
         } else {
             resp.setStatus(405);
-            jsonObject.put("error", "Bungee Method Not allowed");
+            jsonObject.put("error", "Bungee Type Method Not allowed");
             return jsonObject;
         }
     }
@@ -256,9 +258,18 @@ public class BungeeTypeServlet extends APIServlet {
                 MN2BungeeType bungeeType = DatabaseResource.getBungeeTypeLoader().loadEntity(new ObjectId(id));
                 if (bungeeType == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown Bungee "+id);
+                    jsonObject.put("error", "Unknown Bungee Type "+id);
                     return jsonObject;
                 }
+
+                for (MN2Node node : DatabaseResource.getNodeLoader().getNodes()) {
+                    if (node.getBungeeType().get_id().equals(bungeeType.get_id())) {
+                        resp.setStatus(406);
+                        jsonObject.put("error", "Cannot delete bungee type. Please remove from node "+node.getAddress());
+                        return jsonObject;
+                    }
+                }
+
                 DatabaseResource.getBungeeTypeLoader().removeEntity(bungeeType);
                 return jsonObject;
             } catch (Exception ex) {
@@ -269,7 +280,7 @@ public class BungeeTypeServlet extends APIServlet {
             }
         } else {
             resp.setStatus(405);
-            jsonObject.put("error", "Bungee Method Not allowed");
+            jsonObject.put("error", "Bungee Type Method Not allowed");
             return jsonObject;
         }
     }

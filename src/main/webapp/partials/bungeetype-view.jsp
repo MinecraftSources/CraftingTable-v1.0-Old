@@ -45,10 +45,10 @@
                         <span class="glyphicon glyphicon glyphicon-plus"></span>
                     </button>
                 </div>
+                <span ng-show="needsServerType()" class="help-block">At least one server type is require.</span>
+                <span ng-show="needsDefaultServerType()" class="help-block">No default server type selected</span>
+                <span ng-show="hasManyDefaultServerTypes()" class="help-block">Only one server type can be selected as the default</span>
             </div>
-            <span ng-show="needsServerType()" class="help-block">At least one server type is require.</span>
-            <span ng-show="needsDefaultServerType()" class="help-block">No default server type selected</span>
-            <span ng-show="hasManyDefaultServerTypes()" class="help-block">Only one server type can be selected as the default</span>
         </div>
 
         <div class="col-xs-12 table-responsive">
