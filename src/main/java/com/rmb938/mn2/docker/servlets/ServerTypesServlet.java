@@ -29,6 +29,7 @@ public class ServerTypesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
+        req.setAttribute("navActive", "st");
 
         if (req.getRequestURI().endsWith("list")) {
             req.setAttribute("partial", "servertypes-view");

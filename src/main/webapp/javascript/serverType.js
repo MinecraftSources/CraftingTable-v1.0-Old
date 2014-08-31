@@ -145,15 +145,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit == true) {
-        $http.get('/mn2/api/servertype/one?id='+$location.search().id).success(function(data) {
-            $scope.serverType = data;
 
-            $http.get('/mn2/api/plugin/bukkit').success(function (data) {
-                $scope.plugins = data.plugins;
 
-                $http.get('/mn2/api/world/all').success(function (data) {
-                    $scope.worlds = data.worlds;
-
+        $http.get('/mn2/api/plugin/bukkit').success(function (data) {
+            $scope.plugins = data.plugins;
+            $http.get('/mn2/api/world/all').success(function (data) {
+                $scope.worlds = data.worlds;
+                $http.get('/mn2/api/servertype/one?id=' + $location.search().id).success(function (data) {
+                    $scope.serverType = data;
                     for (var i = 0; i < $scope.serverType.plugins.length; i++) {
                         var typePlugin = $scope.serverType.plugins[i];
                         typePlugin.name = undefined;

@@ -28,6 +28,7 @@ public class WorldsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
+        req.setAttribute("navActive", "worlds");
 
         if (req.getRequestURI().endsWith("list")) {
             req.setAttribute("partial", "worlds-view");

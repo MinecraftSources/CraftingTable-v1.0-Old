@@ -5,7 +5,8 @@
 <div>
     <a href="${pageContext.request.contextPath}/mn2/servertype/add"><button type="button" class="btn btn-primary btn-lg">
         <span class="glyphicon glyphicon glyphicon-plus"></span>Add Server Type</button></a>
-    <table class="table-responsive table table-striped">
+    <div class="table-responsive">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>Name</th>
@@ -29,4 +30,5 @@
         %>
         </tbody>
     </table>
+    </div>
 </div>

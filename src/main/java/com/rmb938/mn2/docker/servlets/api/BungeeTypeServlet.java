@@ -33,7 +33,7 @@ public class BungeeTypeServlet extends APIServlet {
 
                 if (bungeeType == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown Bungee Type "+id);
+                    jsonObject.put("error", "Unknown Bungee Type " + id);
                     return jsonObject;
                 }
 
@@ -41,9 +41,11 @@ public class BungeeTypeServlet extends APIServlet {
                 jsonObject.put("name", bungeeType.getName());
 
                 JSONArray serverTypes = new JSONArray();
-                for (MN2ServerType serverType : bungeeType.getServerTypes()) {
+                for (MN2ServerType serverType : bungeeType.getServerTypes().keySet()) {
+                    boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
                     JSONObject serverTypeJSON = new JSONObject();
                     serverTypeJSON.put("_id", serverType.get_id());
+                    serverTypeJSON.put("allowRejoin", allowRejoin);
                     if (serverType == bungeeType.getDefaultType()) {
                         serverTypeJSON.put("isDefault", true);
                     } else {
@@ -71,6 +73,48 @@ public class BungeeTypeServlet extends APIServlet {
                 jsonObject.put("error", "Invalid Bungee ID " + id);
                 return jsonObject;
             }
+        } else if (req.getRequestURI().endsWith("all")) {
+            JSONArray bungeeTypes = new JSONArray();
+
+            for (MN2BungeeType bungeeType : DatabaseResource.getBungeeTypeLoader().getTypes()) {
+                JSONObject bungeeTypeJSON = new JSONObject();
+
+                bungeeTypeJSON.put("_id", bungeeType.get_id().toString());
+                bungeeTypeJSON.put("name", bungeeType.getName());
+
+                JSONArray serverTypes = new JSONArray();
+                for (MN2ServerType serverType : bungeeType.getServerTypes().keySet()) {
+                    boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
+                    JSONObject serverTypeJSON = new JSONObject();
+                    serverTypeJSON.put("_id", serverType.get_id());
+                    serverTypeJSON.put("allowRejoin", allowRejoin);
+                    if (serverType == bungeeType.getDefaultType()) {
+                        serverTypeJSON.put("isDefault", true);
+                    } else {
+                        serverTypeJSON.put("isDefault", false);
+                    }
+                    serverTypes.put(serverTypeJSON);
+                }
+                bungeeTypeJSON.put("serverTypes", serverTypes);
+
+                JSONArray plugins = new JSONArray();
+                for (MN2Plugin plugin : bungeeType.getPlugins().keySet()) {
+                    MN2Plugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
+
+                    JSONObject pluginJSON = new JSONObject();
+                    pluginJSON.put("_id", plugin.get_id().toString());
+                    if (pluginConfig != null) {
+                        pluginJSON.put("_configId", pluginConfig.get_id().toString());
+                    }
+                    plugins.put(pluginJSON);
+                }
+                bungeeTypeJSON.put("plugins", plugins);
+
+                bungeeTypes.put(bungeeTypeJSON);
+            }
+
+            jsonObject.put("bungeeTypes", bungeeTypes);
+            return jsonObject;
         } else {
             resp.setStatus(405);
             jsonObject.put("error", "Bungee Type Method Not allowed");
@@ -105,7 +149,7 @@ public class BungeeTypeServlet extends APIServlet {
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    bungeeType.getServerTypes().add(serverType);
+                    bungeeType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
                     if (object.getBoolean("isDefault")) {
                         bungeeType.setDefaultType(serverType);
                     }
@@ -144,9 +188,10 @@ public class BungeeTypeServlet extends APIServlet {
                 }
                 DatabaseResource.getBungeeTypeLoader().insertEntity(bungeeType);
                 return jsonObject;
-            } catch (IOException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 resp.setStatus(400);
-                jsonObject.put("error", "Error parsing PUT request");
+                jsonObject.put("error", "Error parsing POST request");
                 return jsonObject;
             }
         } else {
@@ -191,7 +236,7 @@ public class BungeeTypeServlet extends APIServlet {
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    bungeeType.getServerTypes().add(serverType);
+                    bungeeType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
                     if (object.getBoolean("isDefault")) {
                         if (bungeeType.getDefaultType() != null) {
                             resp.setStatus(400);
@@ -235,7 +280,7 @@ public class BungeeTypeServlet extends APIServlet {
                 }
                 DatabaseResource.getBungeeTypeLoader().saveEntity(bungeeType);
                 return jsonObject;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 resp.setStatus(400);
                 jsonObject.put("error", "Error parsing PUT request");

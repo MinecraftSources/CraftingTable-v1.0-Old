@@ -40,6 +40,12 @@ public class PluginServlet extends APIServlet {
 
                 MN2Plugin plugin = DatabaseResource.getPluginLoader().loadEntity(new ObjectId(id));
 
+                if (plugin == null) {
+                    resp.setStatus(404);
+                    jsonObject.put("error", "Unknown Plugin "+id);
+                    return jsonObject;
+                }
+
                 jsonObject.put("_id", plugin.get_id().toString());
                 jsonObject.put("name", plugin.getName());
                 jsonObject.put("type", plugin.getType());
@@ -116,6 +122,13 @@ public class PluginServlet extends APIServlet {
 
                 MN2Plugin plugin = new MN2Plugin();
                 plugin.set_id(new ObjectId(pluginJSON.getString("_id")));
+
+                if (DatabaseResource.getPluginLoader().loadEntity(plugin.get_id()) == null) {
+                    resp.setStatus(404);
+                    jsonObject.put("error", "Unknown plugin "+plugin.get_id());
+                    return jsonObject;
+                }
+
                 plugin.setName(pluginJSON.getString("name"));
                 plugin.setType(MN2Plugin.PluginType.valueOf(pluginJSON.getString("type")));
                 plugin.setBaseFolder(pluginJSON.getString("baseFolder"));

@@ -86,7 +86,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
         }
         var servertype = {
             _id: $scope.serverType._id,
-            name: $scope.serverType.name
+            name: $scope.serverType.name,
+            allowRejoin: false,
+            isDefault: false
         };
         $scope.bungeeType.serverTypes.push(servertype);
         $scope.serverType = {}
@@ -141,15 +143,12 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit == true) {
-        $http.get('/mn2/api/bungeetype/one?id='+$location.search().id).success(function(data) {
-            $scope.bungeeType = data;
-
-            $http.get('/mn2/api/plugin/bungee').success(function (data) {
-                $scope.plugins = data.plugins;
-
-                $http.get('/mn2/api/servertype/all').success(function (data) {
-                    $scope.serverTypes = data.serverTypes;
-
+        $http.get('/mn2/api/plugin/bungee').success(function (data) {
+            $scope.plugins = data.plugins;
+            $http.get('/mn2/api/servertype/all').success(function (data) {
+                $scope.serverTypes = data.serverTypes;
+                $http.get('/mn2/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
+                    $scope.bungeeType = data;
                     for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
                         var typePlugin = $scope.bungeeType.plugins[i];
                         typePlugin.name = undefined;

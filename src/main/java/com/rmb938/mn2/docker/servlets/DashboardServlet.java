@@ -33,6 +33,7 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
+        req.setAttribute("navActive", "home");
         req.setAttribute("partial", "dashboard-view");
 
         int onlinePlayers = 0;

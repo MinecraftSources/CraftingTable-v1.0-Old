@@ -7,7 +7,7 @@
 
     <div ng-show="error != undefined" id="error-group" class="alert alert-danger">{{ error }}</div>
 
-    <form name="worldForm" ng-submit="submit()">
+    <form name="worldForm" ng-submit="submit()" novalidate>
         <div class="form-group">
             <label for="inputName">Name</label>
             <input type="text" class="form-control" name="name" ng-pattern="/^[a-zA-Z0-9]+$/" ng-model = "world.name" id="inputName" maxlength="50" placeholder="Name" value="{{ world.name }}" required>

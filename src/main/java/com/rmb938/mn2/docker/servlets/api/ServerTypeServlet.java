@@ -200,7 +200,7 @@ public class ServerTypeServlet extends APIServlet {
                 }
                 DatabaseResource.getServerTypeLoader().insertEntity(serverType);
                 return jsonObject;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 resp.setStatus(400);
                 jsonObject.put("error", "Error parsing POST request");
@@ -295,7 +295,7 @@ public class ServerTypeServlet extends APIServlet {
                 }
                 DatabaseResource.getServerTypeLoader().saveEntity(serverType);
                 return jsonObject;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 resp.setStatus(400);
                 jsonObject.put("error", "Error parsing PUT request");
@@ -323,7 +323,7 @@ public class ServerTypeServlet extends APIServlet {
                 }
 
                 for (MN2BungeeType bungeeType : DatabaseResource.getBungeeTypeLoader().getTypes()) {
-                    for (MN2ServerType serverType1 : bungeeType.getServerTypes()) {
+                    for (MN2ServerType serverType1 : bungeeType.getServerTypes().keySet()) {
                         if (serverType1.get_id().equals(serverType.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete server type. Please remove from bungee "+bungeeType.getName());

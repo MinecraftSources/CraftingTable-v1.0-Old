@@ -6,7 +6,7 @@
 
     <div ng-show="error != undefined" id="error-group" class="alert alert-danger">{{ error }}</div>
 
-    <form id="bungeeTypeForm" ng-submit="submit()">
+    <form id="bungeeTypeForm" ng-submit="submit()" novalidate>
 
         <div class="form-group">
             <label for="inputName">Name</label>
@@ -20,12 +20,14 @@
                 <thead>
                 <tr>
                     <th>Server Type</th>
+                    <th>Allow Rejoin</th>
                     <th>Default</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="serverType in bungeeType.serverTypes">
                     <td>{{ serverType.name }}</td>
+                    <td><input type="checkbox" ng-model="serverType.allowRejoin"></td>
                     <td><input type="checkbox" ng-model="serverType.isDefault"></td>
                     <td><button ng-click="removeServerType(serverType)" type="button" class="btn btn-danger btn-xms">
                         <span class="glyphicon glyphicon glyphicon-minus"></span>

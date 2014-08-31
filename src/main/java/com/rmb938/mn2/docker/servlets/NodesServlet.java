@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "PluginsServlet",
-        urlPatterns = {"/mn2/plugin/list", "/mn2/plugin/edit", "/mn2/plugin/add"})
+        name = "NodesServlet",
+        urlPatterns = {"/mn2/node/list", "/mn2/node/edit", "/mn2/node/add"})
 @Log4j2
-public class PluginsServlet extends HttpServlet {
+public class NodesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
@@ -28,20 +28,20 @@ public class PluginsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
-        req.setAttribute("navActive", "plugins");
+        req.setAttribute("navActive", "nodes");
 
         if (req.getRequestURI().endsWith("list")) {
-            req.setAttribute("partial", "plugins-view");
-            req.setAttribute("plugins", DatabaseResource.getPluginLoader().loadPlugins());
+            req.setAttribute("partial", "nodes-view");
+            req.setAttribute("nodes", DatabaseResource.getNodeLoader().getNodes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
-            req.setAttribute("partial", "plugin-view");
-            req.setAttribute("javascript", "plugin");
+            req.setAttribute("partial", "node-view");
+            req.setAttribute("javascript", "node");
             req.setAttribute("action", "Edit");
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("add")) {
-            req.setAttribute("partial", "plugin-view");
-            req.setAttribute("javascript", "plugin");
+            req.setAttribute("partial", "node-view");
+            req.setAttribute("javascript", "node");
             req.setAttribute("action", "Add");
             requestDispatcher.forward(req, resp);
         }

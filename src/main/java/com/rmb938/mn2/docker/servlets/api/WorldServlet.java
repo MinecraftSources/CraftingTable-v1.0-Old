@@ -81,6 +81,13 @@ public class WorldServlet extends APIServlet {
 
                 MN2World world = new MN2World();
                 world.set_id(new ObjectId(worldJSON.getString("_id")));
+
+                if (DatabaseResource.getWorldLoader().loadEntity(world.get_id()) == null) {
+                    resp.setStatus(404);
+                    jsonObject.put("error", "Unknown world "+world.get_id());
+                    return jsonObject;
+                }
+
                 world.setName(worldJSON.getString("name"));
                 world.setFolder(worldJSON.getString("folder"));
                 world.setEnvironment(MN2World.Environment.valueOf(worldJSON.getString("environment")));

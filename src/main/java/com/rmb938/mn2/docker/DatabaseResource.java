@@ -106,7 +106,7 @@ public class DatabaseResource {
         bungeeTypeLoader = new BungeeTypeLoader(mongoDatabase, pluginLoader, serverTypeLoader);
         nodeLoader = new NodeLoader(mongoDatabase, bungeeTypeLoader);
         bungeeLoader = new BungeeLoader(mongoDatabase, bungeeTypeLoader, nodeLoader);
-        serverLoader = new ServerLoader(mongoDatabase, nodeLoader, serverTypeLoader);
+        serverLoader = new ServerLoader(mongoDatabase, nodeLoader, serverTypeLoader, new PlayerLoader(mongoDatabase, serverTypeLoader, bungeeTypeLoader));
     }
 
 }
