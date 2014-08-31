@@ -4,7 +4,6 @@ import com.rmb938.mn2.docker.DatabaseResource;
 import com.rmb938.mn2.docker.db.entity.MN2Bungee;
 import com.rmb938.mn2.docker.db.entity.MN2Node;
 import com.rmb938.mn2.docker.db.entity.MN2Server;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;

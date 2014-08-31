@@ -6,7 +6,6 @@ import com.rmb938.mn2.docker.db.database.*;
 import com.rmb938.mn2.docker.db.mongo.MongoDatabase;
 import com.rmb938.mn2.docker.db.rabbitmq.RabbitMQ;
 import lombok.Getter;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;

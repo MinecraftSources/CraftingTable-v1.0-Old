@@ -12,9 +12,7 @@ import org.json.JSONObject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.Data;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 @WebServlet(
@@ -35,6 +33,7 @@ public class ServerTypeServlet extends APIServlet {
                 serverTypeJSON.put("players", serverType.getPlayers());
                 serverTypeJSON.put("memory", serverType.getMemory());
                 serverTypeJSON.put("amount", serverType.getAmount());
+                serverTypeJSON.put("disabled", serverType.isDisabled());
 
                 JSONArray plugins = new JSONArray();
                 for (MN2Plugin plugin : serverType.getPlugins().keySet()) {
@@ -84,6 +83,7 @@ public class ServerTypeServlet extends APIServlet {
                 jsonObject.put("players", serverType.getPlayers());
                 jsonObject.put("memory", serverType.getMemory());
                 jsonObject.put("amount", serverType.getAmount());
+                jsonObject.put("disabled", serverType.isDisabled());
 
                 JSONArray plugins = new JSONArray();
                 for (MN2Plugin plugin : serverType.getPlugins().keySet()) {
@@ -146,6 +146,7 @@ public class ServerTypeServlet extends APIServlet {
                 serverType.setPlayers(serverTypeJSON.getInt("players"));
                 serverType.setMemory(serverTypeJSON.getInt("memory"));
                 serverType.setAmount(serverTypeJSON.getInt("amount"));
+                serverType.setDisabled(serverTypeJSON.getBoolean("disabled"));
 
                 JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
@@ -241,6 +242,7 @@ public class ServerTypeServlet extends APIServlet {
                 serverType.setPlayers(serverTypeJSON.getInt("players"));
                 serverType.setMemory(serverTypeJSON.getInt("memory"));
                 serverType.setAmount(serverTypeJSON.getInt("amount"));
+                serverType.setDisabled(serverTypeJSON.getBoolean("disabled"));
 
                 JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {

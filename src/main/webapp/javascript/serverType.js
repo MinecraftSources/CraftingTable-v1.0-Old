@@ -9,6 +9,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.serverType = {};
     $scope.serverType.worlds = [];
     $scope.serverType.plugins = [];
+    $scope.serverType.disabled = false;
     $scope.plugins = [];
     $scope.worlds = [];
     $scope.world = {};

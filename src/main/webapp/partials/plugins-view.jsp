@@ -1,5 +1,5 @@
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.rmb938.mn2.docker.db.entity.MN2Plugin" %>
+<%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Plugins</h1>
 
 <div>

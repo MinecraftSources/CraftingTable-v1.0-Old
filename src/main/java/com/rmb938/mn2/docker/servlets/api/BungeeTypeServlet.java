@@ -1,8 +1,10 @@
 package com.rmb938.mn2.docker.servlets.api;
 
 import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.*;
-import lombok.extern.java.Log;
+import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
+import com.rmb938.mn2.docker.db.entity.MN2Node;
+import com.rmb938.mn2.docker.db.entity.MN2Plugin;
+import com.rmb938.mn2.docker.db.entity.MN2ServerType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
@@ -12,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 @WebServlet(
@@ -308,7 +309,7 @@ public class BungeeTypeServlet extends APIServlet {
                 }
 
                 for (MN2Node node : DatabaseResource.getNodeLoader().getNodes()) {
-                    if (node.getBungeeType().get_id().equals(bungeeType.get_id())) {
+                    if (node.getBungeeType() != null && node.getBungeeType().get_id().equals(bungeeType.get_id())) {
                         resp.setStatus(406);
                         jsonObject.put("error", "Cannot delete bungee type. Please remove from node "+node.getAddress());
                         return jsonObject;

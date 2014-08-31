@@ -1,8 +1,6 @@
 package com.rmb938.mn2.docker.servlets.api;
 
 import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
 import com.rmb938.mn2.docker.db.entity.MN2ServerType;
 import com.rmb938.mn2.docker.db.entity.MN2World;
 import org.bson.types.ObjectId;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 @WebServlet(
         name = "APIWorldServlet",

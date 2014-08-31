@@ -1,7 +1,6 @@
 package com.rmb938.mn2.docker.servlets;
 
 import com.rmb938.mn2.docker.DatabaseResource;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;

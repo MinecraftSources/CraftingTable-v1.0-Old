@@ -2,7 +2,6 @@ package com.rmb938.mn2.docker.servlets.api;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.mongodb.BasicDBObject;
@@ -10,21 +9,15 @@ import com.mongodb.DBObject;
 import com.rmb938.mn2.docker.DatabaseResource;
 import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
 import com.rmb938.mn2.docker.db.entity.MN2Node;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 @WebServlet(
         name = "APINodeServlet",
@@ -104,6 +97,7 @@ public class NodeServlet extends APIServlet {
                         jsonObject.put("error", "Unknown Bungee Type " + nodeJSON.getString("_bungeeType"));
                         return jsonObject;
                     }
+                    node.setBungeeType(bungeeType);
                 } else {
                     node.setBungeeType(null);
                 }

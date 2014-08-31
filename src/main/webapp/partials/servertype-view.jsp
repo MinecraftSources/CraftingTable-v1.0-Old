@@ -31,6 +31,10 @@
             <span ng-show="serverTypeForm.number.$error.required" class="help-block">Amount of servers is required.</span>
             <span ng-show="serverTypeForm.number.$error.min" class="help-block">A amount of 1 server is required.</span>
         </div>
+        <div class="form-group">
+            <label for="inputDisabled">Disable Server Type</label>
+            <input name="disabled" id="inputDisabled" type="checkbox" ng-model="serverType.disabled">
+        </div>
 
         <div class="col-xs-12 table-responsive">
             <table class="table table-striped">
