@@ -224,6 +224,7 @@ public class NodeServlet extends APIServlet {
                     return jsonObject;
                 }
 
+                DatabaseResource.getNodeLoader().getDb().updateDocument(DatabaseResource.getNodeLoader().getCollection(), new BasicDBObject("_id", node.get_id()), new BasicDBObject("$set", new BasicDBObject("lastUpdate", (long) 0)));
                 return jsonObject;
             } catch (Exception e) {
                 resp.setStatus(400);

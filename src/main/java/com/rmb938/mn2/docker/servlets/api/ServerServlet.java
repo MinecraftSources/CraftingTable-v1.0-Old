@@ -84,15 +84,17 @@ public class ServerServlet extends APIServlet {
             }
 
             DockerClientConfig.DockerClientConfigBuilder config = DockerClientConfig.createDefaultConfigBuilder();
-            config.withVersion("1.13");
+            config.withVersion("1.14");
             config.withUri("http://" + server.getNode().getAddress() + ":4243");
             DockerClient dockerClient = new DockerClientImpl(config.build());
             try {
                 dockerClient.inspectContainerCmd(server.getContainerId()).exec();
                 try {
-                    dockerClient.killContainerCmd(server.getContainerId()).exec();
+                    dockerClient.killContainerCmd(server.getContainerId())/*.withSignal("SIGINT")*/.exec();
                 } catch (Exception ignored) {
+                    ignored.printStackTrace();
                 }
+                dockerClient.removeContainerCmd(server.getContainerId()).exec();
             } catch (Exception ex) {
                 if (!(ex instanceof NotFoundException)) {
                     resp.setStatus(500);
