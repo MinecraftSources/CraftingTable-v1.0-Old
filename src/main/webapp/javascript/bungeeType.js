@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/mn2/bungeetype/edit";
+    $scope.edit = $location.path() == "/MN2DockerTomcat/mn2/bungeetype/edit";
     $scope.bungeeType = {};
     $scope.bungeeType.serverTypes = [];
     $scope.bungeeType.plugins = [];
@@ -17,13 +17,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/mn2/bungeetype/list';
+        $window.location.href = '/MN2DockerTomcat/mn2/bungeetype/list';
     };
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/mn2/api/bungeetype/delete?id=' + $scope.bungeeType._id).success(function (data) {
-                $window.location.href = '/mn2/bungeetype/list';
+            $http.delete('/MN2DockerTomcat/mn2/api/bungeetype/delete?id=' + $scope.bungeeType._id).success(function (data) {
+                $window.location.href = '/MN2DockerTomcat/mn2/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -32,14 +32,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/mn2/api/bungeetype/save', $scope.bungeeType).success(function (data) {
-                $window.location.href = '/mn2/bungeetype/list';
+            $http.put('/MN2DockerTomcat/mn2/api/bungeetype/save', $scope.bungeeType).success(function (data) {
+                $window.location.href = '/MN2DockerTomcat/mn2/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/mn2/api/bungeetype/add', $scope.bungeeType).success(function (data) {
-                $window.location.href = '/mn2/bungeetype/list';
+            $http.post('/MN2DockerTomcat/mn2/api/bungeetype/add', $scope.bungeeType).success(function (data) {
+                $window.location.href = '/MN2DockerTomcat/mn2/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -143,11 +143,11 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit == true) {
-        $http.get('/mn2/api/plugin/bungee').success(function (data) {
+        $http.get('/MN2DockerTomcat/mn2/api/plugin/bungee').success(function (data) {
             $scope.plugins = data.plugins;
-            $http.get('/mn2/api/servertype/all').success(function (data) {
+            $http.get('/MN2DockerTomcat/mn2/api/servertype/all').success(function (data) {
                 $scope.serverTypes = data.serverTypes;
-                $http.get('/mn2/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
+                $http.get('/MN2DockerTomcat/mn2/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
                     $scope.bungeeType = data;
                     for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
                         var typePlugin = $scope.bungeeType.plugins[i];
@@ -187,13 +187,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/mn2/api/plugin/bungee').success(function (data) {
+        $http.get('/MN2DockerTomcat/mn2/api/plugin/bungee').success(function (data) {
             $scope.plugins = data.plugins;
         }).error(function (error) {
             $scope.error = error.error;
         });
 
-        $http.get('/mn2/api/servertype/all').success(function (data) {
+        $http.get('/MN2DockerTomcat/mn2/api/servertype/all').success(function (data) {
             $scope.serverTypes = data.serverTypes;
         }).error(function (error) {
             $scope.error = error.error;
