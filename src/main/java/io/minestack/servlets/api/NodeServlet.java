@@ -108,7 +108,7 @@ public class NodeServlet extends APIServlet {
                 DockerClient dockerClient = new DockerClientImpl(config.build());
 
                 try {
-                    dockerClient.createContainerCmd("mnsquared/nodecontroller")
+                    dockerClient.createContainerCmd("minestack/nodecontroller")
                         .withEnv("MONGO_HOSTS=" + System.getenv("MONGO_HOSTS"),
                             "RABBITMQ_HOSTS=" + System.getenv("RABBITMQ_HOSTS"),
                             "RABBITMQ_USERNAME=" + System.getenv("RABBITMQ_USERNAME"),
