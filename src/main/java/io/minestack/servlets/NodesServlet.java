@@ -21,7 +21,11 @@ public class NodesServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        DatabaseResource.initDatabase();
+        try {
+            DatabaseResource.initDatabase();
+        } catch (Exception e) {
+            new ServerTypesServlet();
+        }
         log.info("Init "+this.getServletName());
     }
 

@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/Sillicon/node/edit";
+    $scope.edit = $location.path() == "/Silicon/node/edit";
     $scope.error = undefined;
     $scope.bungeetypes = [];
     $scope.bungeeType = null;
@@ -13,7 +13,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.node._bungeeType = "";
 
     $scope.cancel = function() {
-        $window.location.href = '/Sillicon/node/list';
+        $window.location.href = '/Silicon/node/list';
     };
 
     $scope.nodeAction = function () {
@@ -36,8 +36,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             status = "start";
         }
         $scope.node.status = status;
-        $http.put('/Sillicon/api/node/'+status, $scope.node).success(function (data) {
-            $window.location.href = '/Sillicon/node/list';
+        $http.put('/Silicon/api/node/'+status, $scope.node).success(function (data) {
+            $window.location.href = '/Silicon/node/list';
         }).error(function (error) {
             $scope.error = error.error;
         });
@@ -50,14 +50,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.node._bungeeType = "";
         }
         if ($scope.edit == true) {
-            $http.put('/Sillicon/api/node/save', $scope.node).success(function (data) {
-                $window.location.href = '/Sillicon/node/list';
+            $http.put('/Silicon/api/node/save', $scope.node).success(function (data) {
+                $window.location.href = '/Silicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/Sillicon/api/node/add', $scope.node).success(function (data) {
-                $window.location.href = '/Sillicon/node/list';
+            $http.post('/Silicon/api/node/add', $scope.node).success(function (data) {
+                $window.location.href = '/Silicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -66,8 +66,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/Sillicon/api/node/delete?id=' + $scope.node._id).success(function (data) {
-                $window.location.href = '/Sillicon/node/list';
+            $http.delete('/Silicon/api/node/delete?id=' + $scope.node._id).success(function (data) {
+                $window.location.href = '/Silicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -75,9 +75,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit) {
-        $http.get('/Sillicon/api/bungeetype/all').success(function (data) {
+        $http.get('/Silicon/api/bungeetype/all').success(function (data) {
             $scope.bungeetypes = data.bungeeTypes;
-            $http.get('/Sillicon/api/node/one?id='+$location.search().id).success(function(data) {
+            $http.get('/Silicon/api/node/one?id='+$location.search().id).success(function(data) {
                 $scope.node = data;
 
                 for (var i = 0; i < $scope.bungeetypes.length; i++) {
@@ -94,7 +94,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/Sillicon/api/bungeetype/all').success(function (data) {
+        $http.get('/Silicon/api/bungeetype/all').success(function (data) {
             console.log(data);
             $scope.bungeetypes = data.bungeeTypes;
         }).error(function (error) {

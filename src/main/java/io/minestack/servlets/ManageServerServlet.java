@@ -1,6 +1,5 @@
 package io.minestack.servlets;
 
-import io.minestack.DatabaseResource;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -20,7 +19,6 @@ public class ManageServerServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        DatabaseResource.initDatabase();
         log.info("Init "+this.getServletName());
     }
 

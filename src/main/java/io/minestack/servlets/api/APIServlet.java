@@ -1,6 +1,7 @@
 package io.minestack.servlets.api;
 
 import io.minestack.DatabaseResource;
+import io.minestack.servlets.ServerTypesServlet;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 
@@ -17,7 +18,11 @@ public class APIServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        DatabaseResource.initDatabase();
+        try {
+            DatabaseResource.initDatabase();
+        } catch (Exception e) {
+            new ServerTypesServlet();
+        }
         log.info("Init "+this.getServletName());
     }
 

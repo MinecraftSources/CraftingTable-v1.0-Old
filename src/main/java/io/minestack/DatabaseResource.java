@@ -12,7 +12,7 @@ import java.util.List;
 @Log4j2
 public class DatabaseResource {
 
-    public static void initDatabase() {
+    public static void initDatabase() throws Exception {
         if (Uranium.isNeedsInit()) {
             String hosts = System.getenv("MONGO_HOSTS");
 
