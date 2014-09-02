@@ -1,10 +1,10 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
-import com.rmb938.mn2.docker.db.entity.MN2World;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2BungeeType;
+import io.minestack.db.entity.MN2Plugin;
+import io.minestack.db.entity.MN2ServerType;
+import io.minestack.db.entity.MN2World;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 
 @WebServlet(
         name = "APIServerTypeServlet",
-        urlPatterns = {"/mn2/api/servertype/all", "/mn2/api/servertype/one", "/mn2/api/servertype/save", "/mn2/api/servertype/add", "/mn2/api/servertype/delete"})
+        urlPatterns = {"/api/servertype/all", "/api/servertype/one", "/api/servertype/save", "/api/servertype/add", "/api/servertype/delete"})
 public class ServerTypeServlet extends APIServlet {
 
     @Override

@@ -1,5 +1,5 @@
-<%@ page import="com.rmb938.mn2.docker.db.entity.MN2Bungee" %>
-<%@ page import="com.rmb938.mn2.docker.db.entity.MN2Server" %>
+<%@ page import="io.minestack.db.entity.MN2Bungee" %>
+<%@ page import="io.minestack.db.entity.MN2Server" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Dashboard</h1>
 
@@ -63,7 +63,7 @@
         <%
                     }
         %>
-        <td><a href="${pageContext.request.contextPath}/mn2/bungee/manage?id=<%=bungee.get_id().toString() %>">
+        <td><a href="${pageContext.request.contextPath}/bungee/manage?id=<%=bungee.get_id().toString() %>">
             <button type="button" class="btn btn-default btn-xs">
                 <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
         </a></td>
@@ -124,7 +124,7 @@
             <%
                         }
             %>
-                    <td><a href="${pageContext.request.contextPath}/mn2/server/manage?id=<%=server.get_id().toString() %>">
+                    <td><a href="${pageContext.request.contextPath}/server/manage?id=<%=server.get_id().toString() %>">
                         <button type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
                     </a></td>

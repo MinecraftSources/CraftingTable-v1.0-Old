@@ -1,9 +1,9 @@
-<%@ page import="com.rmb938.mn2.docker.db.entity.MN2ServerType" %>
+<%@ page import="io.minestack.db.entity.MN2ServerType" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Server Types</h1>
 
 <div>
-    <a href="${pageContext.request.contextPath}/mn2/servertype/add"><button type="button" class="btn btn-primary btn-lg">
+    <a href="${pageContext.request.contextPath}/servertype/add"><button type="button" class="btn btn-primary btn-lg">
         <span class="glyphicon glyphicon glyphicon-plus"></span>Add Server Type</button></a>
     <div class="table-responsive">
     <table class="table table-striped">
@@ -22,7 +22,7 @@
         <tr>
             <td><%=serverType.getName() %></td>
             <td><%=serverType.get_id().toString() %></td>
-            <td><a href="${pageContext.request.contextPath}/mn2/servertype/edit?id=<%=serverType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
+            <td><a href="${pageContext.request.contextPath}/servertype/edit?id=<%=serverType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
                 <span class="glyphicon glyphicon glyphicon-pencil"></span></button></a></td>
         </tr>
         <%

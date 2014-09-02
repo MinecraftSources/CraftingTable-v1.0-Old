@@ -1,4 +1,4 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
@@ -6,9 +6,9 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Node;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2BungeeType;
+import io.minestack.db.entity.MN2Node;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 
 @WebServlet(
         name = "APINodeServlet",
-        urlPatterns = {"/mn2/api/node/all", "/mn2/api/node/one", "/mn2/api/node/save", "/mn2/api/node/add", "/mn2/api/node/delete", "/mn2/api/node/stop", "/mn2/api/node/start"})
+        urlPatterns = {"/api/node/all", "/api/node/one", "/api/node/save", "/api/node/add", "/api/node/delete", "/api/node/stop", "/api/node/start"})
 @Log4j2
 public class NodeServlet extends APIServlet {
 

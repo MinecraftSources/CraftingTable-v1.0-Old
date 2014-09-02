@@ -1,6 +1,6 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
-import com.rmb938.mn2.docker.DatabaseResource;
+import io.minestack.DatabaseResource;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 

@@ -1,9 +1,9 @@
-<%@ page import="com.rmb938.mn2.docker.db.entity.MN2BungeeType" %>
+<%@ page import="io.minestack.db.entity.MN2BungeeType" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Bungee Types</h1>
 
 <div>
-    <a href="${pageContext.request.contextPath}/mn2/bungeetype/add"><button type="button" class="btn btn-primary btn-lg">
+    <a href="${pageContext.request.contextPath}/bungeetype/add"><button type="button" class="btn btn-primary btn-lg">
         <span class="glyphicon glyphicon glyphicon-plus"></span>Add Bungee Type</button></a>
     <div class="table-responsive">
     <table class="table table-striped">
@@ -22,7 +22,7 @@
             <tr>
                 <td><%=bungeeType.getName() %></td>
                 <td><%=bungeeType.get_id().toString() %></td>
-                <td><a href="${pageContext.request.contextPath}/mn2/bungeetype/edit?id=<%=bungeeType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
+                <td><a href="${pageContext.request.contextPath}/bungeetype/edit?id=<%=bungeeType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon glyphicon-pencil"></span></button></a></td>
             </tr>
         <%

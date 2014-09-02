@@ -1,10 +1,10 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Node;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2BungeeType;
+import io.minestack.db.entity.MN2Node;
+import io.minestack.db.entity.MN2Plugin;
+import io.minestack.db.entity.MN2ServerType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 
 @WebServlet(
         name = "APIBungeeTypeServlet",
-        urlPatterns = {"/mn2/api/bungeetype/all", "/mn2/api/bungeetype/one", "/mn2/api/bungeetype/save", "/mn2/api/bungeetype/add", "/mn2/api/bungeetype/delete"})
+        urlPatterns = {"/api/bungeetype/all", "/api/bungeetype/one", "/api/bungeetype/save", "/api/bungeetype/add", "/api/bungeetype/delete"})
 @Log4j2
 public class BungeeTypeServlet extends APIServlet {
 

@@ -5,21 +5,21 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/MN2DockerTomcat/mn2/plugin/edit";
+    $scope.edit = $location.path() == "/Sillicon/plugin/edit";
     $scope.plugin = {};
     $scope.plugin.configs = [];
     $scope.config = {};
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/MN2DockerTomcat/mn2/plugin/list';
+        $window.location.href = '/Sillicon/plugin/list';
     };
 
     $scope.remove = function () {
         if ($scope.edit) {
-            $http.delete('/MN2DockerTomcat/mn2/api/plugin/delete?id=' + $scope.plugin._id).success(function (data) {
+            $http.delete('/Sillicon/api/plugin/delete?id=' + $scope.plugin._id).success(function (data) {
                 console.log(data);
-                $window.location.href = '/MN2DockerTomcat/mn2/plugin/list';
+                $window.location.href = '/Sillicon/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -28,14 +28,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/MN2DockerTomcat/mn2/api/plugin/save', $scope.plugin).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/plugin/list';
+            $http.put('/Sillicon/api/plugin/save', $scope.plugin).success(function (data) {
+                $window.location.href = '/Sillicon/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/MN2DockerTomcat/mn2/api/plugin/add', $scope.plugin).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/plugin/list';
+            $http.post('/Sillicon/api/plugin/add', $scope.plugin).success(function (data) {
+                $window.location.href = '/Sillicon/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -73,7 +73,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit) {
-        $http.get('/MN2DockerTomcat/mn2/api/plugin/one?id='+$location.search().id).success(function (data) {
+        $http.get('/Sillicon/api/plugin/one?id='+$location.search().id).success(function (data) {
             console.log(data);
             $scope.plugin = data;
         }).error(function (error) {

@@ -1,11 +1,11 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2Bungee;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2Bungee;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
         name = "APIBungeeServlet",
-        urlPatterns = {"/mn2/api/bungee"})
+        urlPatterns = {"/api/bungee"})
 @Log4j2
 public class BungeeServlet extends APIServlet {
 

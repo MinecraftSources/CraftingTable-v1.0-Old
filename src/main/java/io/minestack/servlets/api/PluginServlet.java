@@ -1,9 +1,9 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2BungeeType;
-import com.rmb938.mn2.docker.db.entity.MN2Plugin;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2BungeeType;
+import io.minestack.db.entity.MN2Plugin;
+import io.minestack.db.entity.MN2ServerType;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 @WebServlet(
         name = "APIPluginServlet",
-        urlPatterns = {"/mn2/api/plugin/bungee", "/mn2/api/plugin/bukkit", "/mn2/api/plugin/all", "/mn2/api/plugin/one", "/mn2/api/plugin/save", "/mn2/api/plugin/add", "/mn2/api/plugin/delete"})
+        urlPatterns = {"/api/plugin/bungee", "/api/plugin/bukkit", "/api/plugin/all", "/api/plugin/one", "/api/plugin/save", "/api/plugin/add", "/api/plugin/delete"})
 public class PluginServlet extends APIServlet {
 
     @Override

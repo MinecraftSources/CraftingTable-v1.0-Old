@@ -1,8 +1,8 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2ServerType;
-import com.rmb938.mn2.docker.db.entity.MN2World;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2ServerType;
+import io.minestack.db.entity.MN2World;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 
 @WebServlet(
         name = "APIWorldServlet",
-        urlPatterns = {"/mn2/api/world/all", "/mn2/api/world/one", "/mn2/api/world/save", "/mn2/api/world/add", "/mn2/api/world/delete"})
+        urlPatterns = {"/api/world/all", "/api/world/one", "/api/world/save", "/api/world/add", "/api/world/delete"})
 public class WorldServlet extends APIServlet {
 
     @Override

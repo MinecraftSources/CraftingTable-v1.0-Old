@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/MN2DockerTomcat/mn2/node/edit";
+    $scope.edit = $location.path() == "/Sillicon/node/edit";
     $scope.error = undefined;
     $scope.bungeetypes = [];
     $scope.bungeeType = null;
@@ -13,7 +13,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.node._bungeeType = "";
 
     $scope.cancel = function() {
-        $window.location.href = '/MN2DockerTomcat/mn2/node/list';
+        $window.location.href = '/Sillicon/node/list';
     };
 
     $scope.nodeAction = function () {
@@ -36,8 +36,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             status = "start";
         }
         $scope.node.status = status;
-        $http.put('/MN2DockerTomcat/mn2/api/node/'+status, $scope.node).success(function (data) {
-            $window.location.href = '/MN2DockerTomcat/mn2/node/list';
+        $http.put('/Sillicon/api/node/'+status, $scope.node).success(function (data) {
+            $window.location.href = '/Sillicon/node/list';
         }).error(function (error) {
             $scope.error = error.error;
         });
@@ -50,14 +50,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.node._bungeeType = "";
         }
         if ($scope.edit == true) {
-            $http.put('/MN2DockerTomcat/mn2/api/node/save', $scope.node).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/node/list';
+            $http.put('/Sillicon/api/node/save', $scope.node).success(function (data) {
+                $window.location.href = '/Sillicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/MN2DockerTomcat/mn2/api/node/add', $scope.node).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/node/list';
+            $http.post('/Sillicon/api/node/add', $scope.node).success(function (data) {
+                $window.location.href = '/Sillicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -66,8 +66,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/MN2DockerTomcat/mn2/api/node/delete?id=' + $scope.node._id).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/node/list';
+            $http.delete('/Sillicon/api/node/delete?id=' + $scope.node._id).success(function (data) {
+                $window.location.href = '/Sillicon/node/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -75,9 +75,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit) {
-        $http.get('/MN2DockerTomcat/mn2/api/bungeetype/all').success(function (data) {
+        $http.get('/Sillicon/api/bungeetype/all').success(function (data) {
             $scope.bungeetypes = data.bungeeTypes;
-            $http.get('/MN2DockerTomcat/mn2/api/node/one?id='+$location.search().id).success(function(data) {
+            $http.get('/Sillicon/api/node/one?id='+$location.search().id).success(function(data) {
                 $scope.node = data;
 
                 for (var i = 0; i < $scope.bungeetypes.length; i++) {
@@ -94,7 +94,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/MN2DockerTomcat/mn2/api/bungeetype/all').success(function (data) {
+        $http.get('/Sillicon/api/bungeetype/all').success(function (data) {
             console.log(data);
             $scope.bungeetypes = data.bungeeTypes;
         }).error(function (error) {

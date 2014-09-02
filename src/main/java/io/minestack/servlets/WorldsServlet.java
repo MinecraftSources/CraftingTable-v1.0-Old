@@ -1,6 +1,6 @@
-package com.rmb938.mn2.docker.servlets;
+package io.minestack.servlets;
 
-import com.rmb938.mn2.docker.DatabaseResource;
+import io.minestack.DatabaseResource;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "PluginsServlet",
-        urlPatterns = {"/mn2/plugin/list", "/mn2/plugin/edit", "/mn2/plugin/add"})
+        name = "WorldsServlet",
+        urlPatterns = {"/world/list", "/world/edit", "/world/add"})
 @Log4j2
-public class PluginsServlet extends HttpServlet {
+public class WorldsServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
@@ -28,20 +28,20 @@ public class PluginsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
-        req.setAttribute("navActive", "plugins");
+        req.setAttribute("navActive", "worlds");
 
         if (req.getRequestURI().endsWith("list")) {
-            req.setAttribute("partial", "plugins-view");
-            req.setAttribute("plugins", DatabaseResource.getPluginLoader().loadPlugins());
+            req.setAttribute("partial", "worlds-view");
+            req.setAttribute("worlds", DatabaseResource.getWorldLoader().getWorlds());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
-            req.setAttribute("partial", "plugin-view");
-            req.setAttribute("javascript", "plugin");
+            req.setAttribute("partial", "world-view");
+            req.setAttribute("javascript", "world");
             req.setAttribute("action", "Edit");
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("add")) {
-            req.setAttribute("partial", "plugin-view");
-            req.setAttribute("javascript", "plugin");
+            req.setAttribute("partial", "world-view");
+            req.setAttribute("javascript", "world");
             req.setAttribute("action", "Add");
             requestDispatcher.forward(req, resp);
         }

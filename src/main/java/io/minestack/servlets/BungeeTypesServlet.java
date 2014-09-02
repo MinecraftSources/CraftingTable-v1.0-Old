@@ -1,6 +1,6 @@
-package com.rmb938.mn2.docker.servlets;
+package io.minestack.servlets;
 
-import com.rmb938.mn2.docker.DatabaseResource;
+import io.minestack.DatabaseResource;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "WorldsServlet",
-        urlPatterns = {"/mn2/world/list", "/mn2/world/edit", "/mn2/world/add"})
+        name = "BungeeTypesServlet",
+        urlPatterns = {"/bungeetype/list", "/bungeetype/edit", "/bungeetype/add"})
 @Log4j2
-public class WorldsServlet extends HttpServlet {
+public class BungeeTypesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
@@ -28,20 +28,20 @@ public class WorldsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index/index.jsp");
-        req.setAttribute("navActive", "worlds");
+        req.setAttribute("navActive", "bt");
 
         if (req.getRequestURI().endsWith("list")) {
-            req.setAttribute("partial", "worlds-view");
-            req.setAttribute("worlds", DatabaseResource.getWorldLoader().getWorlds());
+            req.setAttribute("partial", "bungeetypes-view");
+            req.setAttribute("bungeetypes", DatabaseResource.getBungeeTypeLoader().getTypes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
-            req.setAttribute("partial", "world-view");
-            req.setAttribute("javascript", "world");
+            req.setAttribute("partial", "bungeetype-view");
+            req.setAttribute("javascript", "bungeeType");
             req.setAttribute("action", "Edit");
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("add")) {
-            req.setAttribute("partial", "world-view");
-            req.setAttribute("javascript", "world");
+            req.setAttribute("partial", "bungeetype-view");
+            req.setAttribute("javascript", "bungeeType");
             req.setAttribute("action", "Add");
             requestDispatcher.forward(req, resp);
         }

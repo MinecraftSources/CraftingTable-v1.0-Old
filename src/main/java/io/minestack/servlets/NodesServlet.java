@@ -1,6 +1,6 @@
-package com.rmb938.mn2.docker.servlets;
+package io.minestack.servlets;
 
-import com.rmb938.mn2.docker.DatabaseResource;
+import io.minestack.DatabaseResource;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @WebServlet(
         name = "NodesServlet",
-        urlPatterns = {"/mn2/node/list", "/mn2/node/edit", "/mn2/node/add"})
+        urlPatterns = {"/node/list", "/node/edit", "/node/add"})
 @Log4j2
 public class NodesServlet extends HttpServlet {
 

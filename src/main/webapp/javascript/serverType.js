@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/MN2DockerTomcat/mn2/servertype/edit";
+    $scope.edit = $location.path() == "/Sillicon/servertype/edit";
     $scope.serverType = {};
     $scope.serverType.worlds = [];
     $scope.serverType.plugins = [];
@@ -18,7 +18,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/MN2DockerTomcat/mn2/servertype/list';
+        $window.location.href = '/Sillicon/servertype/list';
     };
 
     $scope.needsWorld = function () {
@@ -54,9 +54,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/MN2DockerTomcat/mn2/api/servertype/delete?id=' + $scope.serverType._id).success(function (data) {
+            $http.delete('/Sillicon/api/servertype/delete?id=' + $scope.serverType._id).success(function (data) {
                 console.log(data);
-                $window.location.href = '/MN2DockerTomcat/mn2/servertype/list';
+                $window.location.href = '/Sillicon/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -65,14 +65,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/MN2DockerTomcat/mn2/api/servertype/save', $scope.serverType).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/servertype/list';
+            $http.put('/Sillicon/api/servertype/save', $scope.serverType).success(function (data) {
+                $window.location.href = '/Sillicon/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/MN2DockerTomcat/mn2/api/servertype/add', $scope.serverType).success(function (data) {
-                $window.location.href = '/MN2DockerTomcat/mn2/servertype/list';
+            $http.post('/Sillicon/api/servertype/add', $scope.serverType).success(function (data) {
+                $window.location.href = '/Sillicon/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -148,11 +148,11 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     if ($scope.edit == true) {
 
 
-        $http.get('/MN2DockerTomcat/mn2/api/plugin/bukkit').success(function (data) {
+        $http.get('/Sillicon/api/plugin/bukkit').success(function (data) {
             $scope.plugins = data.plugins;
-            $http.get('/MN2DockerTomcat/mn2/api/world/all').success(function (data) {
+            $http.get('/Sillicon/api/world/all').success(function (data) {
                 $scope.worlds = data.worlds;
-                $http.get('/MN2DockerTomcat/mn2/api/servertype/one?id=' + $location.search().id).success(function (data) {
+                $http.get('/Sillicon/api/servertype/one?id=' + $location.search().id).success(function (data) {
                     $scope.serverType = data;
                     for (var i = 0; i < $scope.serverType.plugins.length; i++) {
                         var typePlugin = $scope.serverType.plugins[i];
@@ -193,13 +193,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/MN2DockerTomcat/mn2/api/plugin/bukkit').success(function (data) {
+        $http.get('/Sillicon/api/plugin/bukkit').success(function (data) {
             $scope.plugins = data.plugins;
         }).error(function (error) {
             $scope.error = error.error;
         });
 
-        $http.get('/MN2DockerTomcat/mn2/api/world/all').success(function (data) {
+        $http.get('/Sillicon/api/world/all').success(function (data) {
             $scope.worlds = data.worlds;
         }).error(function (error) {
             $scope.error = error.error;

@@ -1,9 +1,9 @@
-package com.rmb938.mn2.docker.servlets;
+package io.minestack.servlets;
 
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2Bungee;
-import com.rmb938.mn2.docker.db.entity.MN2Node;
-import com.rmb938.mn2.docker.db.entity.MN2Server;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2Bungee;
+import io.minestack.db.entity.MN2Node;
+import io.minestack.db.entity.MN2Server;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 @WebServlet(
         name = "DashboardServlet",
-        urlPatterns = {"/mn2"})
+        urlPatterns = {"/index"})
 @Log4j2
 public class DashboardServlet extends HttpServlet {
 

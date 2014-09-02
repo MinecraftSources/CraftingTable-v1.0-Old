@@ -1,11 +1,11 @@
-package com.rmb938.mn2.docker.servlets.api;
+package io.minestack.servlets.api;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.rmb938.mn2.docker.DatabaseResource;
-import com.rmb938.mn2.docker.db.entity.MN2Server;
+import io.minestack.DatabaseResource;
+import io.minestack.db.entity.MN2Server;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
         name = "APIServerServlet",
-        urlPatterns = {"/mn2/api/server"})
+        urlPatterns = {"/api/server"})
 @Log4j2
 public class ServerServlet extends APIServlet {
 
