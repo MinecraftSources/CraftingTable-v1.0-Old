@@ -1,4 +1,4 @@
-MN2-Docker-Tomcat
+Silicon
 =================
 
-Tomcat Application for MN2-Docker
+Tomcat Application for Minestack
