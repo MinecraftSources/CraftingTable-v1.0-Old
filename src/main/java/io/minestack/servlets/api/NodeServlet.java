@@ -6,9 +6,9 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.minestack.DatabaseResource;
-import io.minestack.db.entity.MN2BungeeType;
-import io.minestack.db.entity.MN2Node;
+import io.minestack.db.Uranium;
+import io.minestack.db.entity.UBungeeType;
+import io.minestack.db.entity.UNode;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class NodeServlet extends APIServlet {
             String id = req.getParameter("id");
 
             try {
-                MN2Node node = DatabaseResource.getNodeLoader().loadEntity(new ObjectId(id));
+                UNode node = Uranium.getNodeLoader().loadEntity(new ObjectId(id));
 
                 if (node == null) {
                     resp.setStatus(404);
@@ -78,12 +78,12 @@ public class NodeServlet extends APIServlet {
                 }
                 JSONObject nodeJSON = new JSONObject(json);
 
-                MN2Node node = new MN2Node();
+                UNode node = new UNode();
                 node.setAddress(nodeJSON.getString("host"));
                 node.setRam(nodeJSON.getInt("ram"));
                 node.setLastUpdate(0L);
 
-                DBObject dbObject = DatabaseResource.getNodeLoader().getDb().findOne(DatabaseResource.getNodeLoader().getCollection(), new BasicDBObject("host", node.getAddress()));
+                DBObject dbObject = Uranium.getNodeLoader().getDb().findOne(Uranium.getNodeLoader().getCollection(), new BasicDBObject("host", node.getAddress()));
                 if (dbObject != null) {
                     resp.setStatus(400);
                     jsonObject.put("error", "A node already exists with that IP Address.");
@@ -91,7 +91,7 @@ public class NodeServlet extends APIServlet {
                 }
 
                 if (nodeJSON.getString("_bungeeType").length() > 0) {
-                    MN2BungeeType bungeeType = DatabaseResource.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
+                    UBungeeType bungeeType = Uranium.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
                     if (bungeeType == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Bungee Type " + nodeJSON.getString("_bungeeType"));
@@ -122,7 +122,7 @@ public class NodeServlet extends APIServlet {
                     return jsonObject;
                 }
 
-                DatabaseResource.getNodeLoader().insertEntity(node);
+                Uranium.getNodeLoader().insertEntity(node);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,10 +152,10 @@ public class NodeServlet extends APIServlet {
                 }
                 JSONObject nodeJSON = new JSONObject(json);
 
-                MN2Node node = new MN2Node();
+                UNode node = new UNode();
                 node.set_id(new ObjectId(nodeJSON.getString("_id")));
 
-                if (DatabaseResource.getNodeLoader().loadEntity(node.get_id()) == null) {
+                if (Uranium.getNodeLoader().loadEntity(node.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown node " + node.get_id());
                     return jsonObject;
@@ -166,7 +166,7 @@ public class NodeServlet extends APIServlet {
                 node.setLastUpdate(0L);
 
                 if (nodeJSON.getString("_bungeeType").length() > 0) {
-                    MN2BungeeType bungeeType = DatabaseResource.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
+                    UBungeeType bungeeType = Uranium.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
                     if (bungeeType == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Bungee Type " + nodeJSON.getString("_bungeeType"));
@@ -177,7 +177,7 @@ public class NodeServlet extends APIServlet {
                     node.setBungeeType(null);
                 }
 
-                DatabaseResource.getNodeLoader().saveEntity(node);
+                Uranium.getNodeLoader().saveEntity(node);
                 return jsonObject;
             } catch (Exception e) {
                 resp.setStatus(400);
@@ -195,7 +195,7 @@ public class NodeServlet extends APIServlet {
                 }
                 JSONObject nodeJSON = new JSONObject(json);
 
-                MN2Node node = DatabaseResource.getNodeLoader().loadEntity(new ObjectId(nodeJSON.getString("_id")));
+                UNode node = Uranium.getNodeLoader().loadEntity(new ObjectId(nodeJSON.getString("_id")));
 
                 if (node == null) {
                     resp.setStatus(404);
@@ -224,7 +224,7 @@ public class NodeServlet extends APIServlet {
                     return jsonObject;
                 }
 
-                DatabaseResource.getNodeLoader().getDb().updateDocument(DatabaseResource.getNodeLoader().getCollection(), new BasicDBObject("_id", node.get_id()), new BasicDBObject("$set", new BasicDBObject("lastUpdate", (long) 0)));
+                Uranium.getNodeLoader().getDb().updateDocument(Uranium.getNodeLoader().getCollection(), new BasicDBObject("_id", node.get_id()), new BasicDBObject("$set", new BasicDBObject("lastUpdate", (long) 0)));
                 return jsonObject;
             } catch (Exception e) {
                 resp.setStatus(400);
@@ -242,7 +242,7 @@ public class NodeServlet extends APIServlet {
                 }
                 JSONObject nodeJSON = new JSONObject(json);
 
-                MN2Node node = DatabaseResource.getNodeLoader().loadEntity(new ObjectId(nodeJSON.getString("_id")));
+                UNode node = Uranium.getNodeLoader().loadEntity(new ObjectId(nodeJSON.getString("_id")));
 
                 if (node == null) {
                     resp.setStatus(404);
@@ -291,7 +291,7 @@ public class NodeServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                MN2Node node = DatabaseResource.getNodeLoader().loadEntity(new ObjectId(id));
+                UNode node = Uranium.getNodeLoader().loadEntity(new ObjectId(id));
                 if (node == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown Node "+id);
@@ -320,7 +320,7 @@ public class NodeServlet extends APIServlet {
                     return jsonObject;
                 }
 
-                DatabaseResource.getNodeLoader().removeEntity(node);
+                Uranium.getNodeLoader().removeEntity(node);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

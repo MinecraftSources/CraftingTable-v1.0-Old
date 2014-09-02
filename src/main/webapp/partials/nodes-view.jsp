@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.MN2Node" %>
+<%@ page import="io.minestack.db.entity.UNode" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Nodes</h1>
 
@@ -20,8 +20,8 @@
             </thead>
             <tbody>
             <%
-                ArrayList<MN2Node> nodes = (ArrayList<MN2Node>) request.getAttribute("nodes");
-                for (MN2Node node : nodes) {
+                ArrayList<UNode> nodes = (ArrayList<UNode>) request.getAttribute("nodes");
+                for (UNode node : nodes) {
             %>
             <tr>
                 <td><%=node.getAddress() %>

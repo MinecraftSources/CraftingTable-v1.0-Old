@@ -1,8 +1,8 @@
 package io.minestack.servlets.api;
 
-import io.minestack.DatabaseResource;
-import io.minestack.db.entity.MN2ServerType;
-import io.minestack.db.entity.MN2World;
+import io.minestack.db.Uranium;
+import io.minestack.db.entity.UServerType;
+import io.minestack.db.entity.UWorld;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class WorldServlet extends APIServlet {
 
         if (req.getRequestURI().endsWith("all")) {
             JSONArray worldsJSON = new JSONArray();
-            for (MN2World world : DatabaseResource.getWorldLoader().getWorlds()) {
+            for (UWorld world : Uranium.getWorldLoader().getWorlds()) {
                 JSONObject worldJSON = new JSONObject();
 
                 worldJSON.put("_id", world.get_id());
@@ -41,7 +41,7 @@ public class WorldServlet extends APIServlet {
             String id = req.getParameter("id");
 
             try {
-                MN2World world = DatabaseResource.getWorldLoader().loadEntity(new ObjectId(id));
+                UWorld world = Uranium.getWorldLoader().loadEntity(new ObjectId(id));
 
                 jsonObject.put("_id", world.get_id());
                 jsonObject.put("name", world.getName());
@@ -76,10 +76,10 @@ public class WorldServlet extends APIServlet {
                 }
                 JSONObject worldJSON = new JSONObject(json);
 
-                MN2World world = new MN2World();
+                UWorld world = new UWorld();
                 world.set_id(new ObjectId(worldJSON.getString("_id")));
 
-                if (DatabaseResource.getWorldLoader().loadEntity(world.get_id()) == null) {
+                if (Uranium.getWorldLoader().loadEntity(world.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown world "+world.get_id());
                     return jsonObject;
@@ -87,12 +87,12 @@ public class WorldServlet extends APIServlet {
 
                 world.setName(worldJSON.getString("name"));
                 world.setFolder(worldJSON.getString("folder"));
-                world.setEnvironment(MN2World.Environment.valueOf(worldJSON.getString("environment")));
+                world.setEnvironment(UWorld.Environment.valueOf(worldJSON.getString("environment")));
                 if (worldJSON.has("generator") && worldJSON.getString("generator").length() > 0) {
                     world.setGenerator(worldJSON.getString("generator"));
                 }
 
-                DatabaseResource.getWorldLoader().saveEntity(world);
+                Uranium.getWorldLoader().saveEntity(world);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -122,15 +122,15 @@ public class WorldServlet extends APIServlet {
                 }
                 JSONObject worldJSON = new JSONObject(json);
 
-                MN2World world = new MN2World();
+                UWorld world = new UWorld();
                 world.setName(worldJSON.getString("name"));
                 world.setFolder(worldJSON.getString("folder"));
-                world.setEnvironment(MN2World.Environment.valueOf(worldJSON.getString("environment")));
+                world.setEnvironment(UWorld.Environment.valueOf(worldJSON.getString("environment")));
                 if (worldJSON.has("generator") && worldJSON.getString("generator").length() > 0) {
                         world.setGenerator(worldJSON.getString("generator"));
                 }
 
-                DatabaseResource.getWorldLoader().insertEntity(world);
+                Uranium.getWorldLoader().insertEntity(world);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -153,15 +153,15 @@ public class WorldServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                MN2World world = DatabaseResource.getWorldLoader().loadEntity(new ObjectId(id));
+                UWorld world = Uranium.getWorldLoader().loadEntity(new ObjectId(id));
                 if (world == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown World Type "+id);
                     return jsonObject;
                 }
 
-                for (MN2ServerType serverType : DatabaseResource.getServerTypeLoader().getTypes()) {
-                    for (MN2World world1 : serverType.getWorlds()) {
+                for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
+                    for (UWorld world1 : serverType.getWorlds()) {
                         if (world1.get_id().equals(world.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete world. Please remove from server type "+serverType.getName());
@@ -170,7 +170,7 @@ public class WorldServlet extends APIServlet {
                     }
                 }
 
-                DatabaseResource.getWorldLoader().removeEntity(world);
+                Uranium.getWorldLoader().removeEntity(world);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

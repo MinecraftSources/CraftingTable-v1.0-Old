@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.MN2BungeeType" %>
+<%@ page import="io.minestack.db.entity.UBungeeType" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Bungee Types</h1>
 
@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         <%
-            ArrayList<MN2BungeeType> bungeetypes = (ArrayList<MN2BungeeType>) request.getAttribute("bungeetypes");
-            for (MN2BungeeType bungeeType : bungeetypes) {
+            ArrayList<UBungeeType> bungeetypes = (ArrayList<UBungeeType>) request.getAttribute("bungeetypes");
+            for (UBungeeType bungeeType : bungeetypes) {
         %>
             <tr>
                 <td><%=bungeeType.getName() %></td>

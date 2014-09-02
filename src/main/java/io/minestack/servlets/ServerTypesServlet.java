@@ -1,6 +1,7 @@
 package io.minestack.servlets;
 
 import io.minestack.DatabaseResource;
+import io.minestack.db.Uranium;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -32,7 +33,7 @@ public class ServerTypesServlet extends HttpServlet {
 
         if (req.getRequestURI().endsWith("list")) {
             req.setAttribute("partial", "servertypes-view");
-            req.setAttribute("servertypes", DatabaseResource.getServerTypeLoader().getTypes());
+            req.setAttribute("servertypes", Uranium.getServerTypeLoader().getTypes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
             req.setAttribute("partial", "servertype-view");

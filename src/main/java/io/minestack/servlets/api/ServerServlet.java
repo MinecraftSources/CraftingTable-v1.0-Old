@@ -4,8 +4,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import io.minestack.DatabaseResource;
-import io.minestack.db.entity.MN2Server;
+import io.minestack.db.Uranium;
+import io.minestack.db.entity.UServer;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -27,7 +27,7 @@ public class ServerServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            MN2Server server = DatabaseResource.getServerLoader().loadEntity(new ObjectId(id));
+            UServer server = Uranium.getServerLoader().loadEntity(new ObjectId(id));
 
             if (server == null) {
                 resp.setStatus(404);
@@ -69,7 +69,7 @@ public class ServerServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            MN2Server server = DatabaseResource.getServerLoader().loadEntity(new ObjectId(id));
+            UServer server = Uranium.getServerLoader().loadEntity(new ObjectId(id));
 
             if (server == null) {
                 resp.setStatus(404);
@@ -103,7 +103,7 @@ public class ServerServlet extends APIServlet {
                 }
             }
             server.setLastUpdate(0);
-            DatabaseResource.getServerLoader().saveEntity(server);
+            Uranium.getServerLoader().saveEntity(server);
             return jsonObject;
         } catch (Exception ex) {
             resp.setStatus(400);

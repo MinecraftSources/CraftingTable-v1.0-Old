@@ -1,9 +1,9 @@
 package io.minestack.servlets.api;
 
-import io.minestack.DatabaseResource;
-import io.minestack.db.entity.MN2BungeeType;
-import io.minestack.db.entity.MN2Plugin;
-import io.minestack.db.entity.MN2ServerType;
+import io.minestack.db.Uranium;
+import io.minestack.db.entity.UBungeeType;
+import io.minestack.db.entity.UPlugin;
+import io.minestack.db.entity.UServerType;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,19 +25,19 @@ public class PluginServlet extends APIServlet {
         JSONObject jsonObject = super.getJSON(req, resp);
 
         JSONArray pluginsJSON = new JSONArray();
-        ArrayList<MN2Plugin> plugins;
+        ArrayList<UPlugin> plugins;
         if (req.getRequestURI().endsWith("bungee")) {
-            plugins = DatabaseResource.getPluginLoader().loadPlugins(MN2Plugin.PluginType.BUNGEE);
+            plugins = Uranium.getPluginLoader().loadPlugins(UPlugin.PluginType.BUNGEE);
         } else if (req.getRequestURI().endsWith("bukkit")) {
-            plugins = DatabaseResource.getPluginLoader().loadPlugins(MN2Plugin.PluginType.BUKKIT);
+            plugins = Uranium.getPluginLoader().loadPlugins(UPlugin.PluginType.BUKKIT);
         } else if (req.getRequestURI().endsWith("all")) {
-            plugins = DatabaseResource.getPluginLoader().loadPlugins();
+            plugins = Uranium.getPluginLoader().loadPlugins();
         } else if (req.getRequestURI().endsWith("one")) {
             String id = req.getParameter("id");
 
             try {
 
-                MN2Plugin plugin = DatabaseResource.getPluginLoader().loadEntity(new ObjectId(id));
+                UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(id));
 
                 if (plugin == null) {
                     resp.setStatus(404);
@@ -52,7 +52,7 @@ public class PluginServlet extends APIServlet {
                 jsonObject.put("configFolder", plugin.getConfigFolder());
 
                 JSONArray configs = new JSONArray();
-                for (MN2Plugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
+                for (UPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
                     JSONObject configJSON = new JSONObject();
 
                     configJSON.put("_id", pluginConfig.get_id().toString());
@@ -76,7 +76,7 @@ public class PluginServlet extends APIServlet {
             jsonObject.put("error", "Plugin Method Not allowed");
             return jsonObject;
         }
-        for (MN2Plugin plugin : plugins) {
+        for (UPlugin plugin : plugins) {
             JSONObject pluginJSON = new JSONObject();
 
             pluginJSON.put("_id", plugin.get_id().toString());
@@ -86,7 +86,7 @@ public class PluginServlet extends APIServlet {
             pluginJSON.put("configFolder", plugin.getConfigFolder());
 
             JSONArray configs = new JSONArray();
-            for (MN2Plugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
+            for (UPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
                 JSONObject configJSON = new JSONObject();
 
                 configJSON.put("_id", pluginConfig.get_id().toString());
@@ -119,24 +119,24 @@ public class PluginServlet extends APIServlet {
                 }
                 JSONObject pluginJSON = new JSONObject(json);
 
-                MN2Plugin plugin = new MN2Plugin();
+                UPlugin plugin = new UPlugin();
                 plugin.set_id(new ObjectId(pluginJSON.getString("_id")));
 
-                if (DatabaseResource.getPluginLoader().loadEntity(plugin.get_id()) == null) {
+                if (Uranium.getPluginLoader().loadEntity(plugin.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown plugin "+plugin.get_id());
                     return jsonObject;
                 }
 
                 plugin.setName(pluginJSON.getString("name"));
-                plugin.setType(MN2Plugin.PluginType.valueOf(pluginJSON.getString("type")));
+                plugin.setType(UPlugin.PluginType.valueOf(pluginJSON.getString("type")));
                 plugin.setBaseFolder(pluginJSON.getString("baseFolder"));
                 plugin.setConfigFolder(pluginJSON.getString("configFolder"));
 
                 JSONArray configs = pluginJSON.getJSONArray("configs");
                 for (int i = 0; i < configs.length(); i++) {
                     JSONObject object = configs.getJSONObject(i);
-                    MN2Plugin.PluginConfig pluginConfig = new MN2Plugin.PluginConfig();
+                    UPlugin.PluginConfig pluginConfig = new UPlugin.PluginConfig();
                     if (object.has("_id")) {
                         pluginConfig.set_id(new ObjectId(object.getString("_id")));
                     } else {
@@ -148,10 +148,10 @@ public class PluginServlet extends APIServlet {
                     plugin.getConfigs().put(pluginConfig.get_id(), pluginConfig);
                 }
 
-                for (MN2ServerType serverType : DatabaseResource.getServerTypeLoader().getTypes()) {
-                    for (MN2Plugin plugin1 : serverType.getPlugins().keySet()) {
+                for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
+                    for (UPlugin plugin1 : serverType.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            MN2Plugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin1);
+                            UPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
                                 jsonObject.put("error", "Cannot save plugin. Please remove from server type "+serverType.getName()+" before adding configs");
@@ -175,10 +175,10 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (MN2BungeeType bungeeType : DatabaseResource.getBungeeTypeLoader().getTypes()) {
-                    for (MN2Plugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
+                    for (UPlugin plugin1 : bungeeType.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            MN2Plugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin1);
+                            UPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
                                 jsonObject.put("error", "Cannot save plugin. Please remove from bungee type "+bungeeType.getName()+" before adding configs");
@@ -202,7 +202,7 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                DatabaseResource.getPluginLoader().saveEntity(plugin);
+                Uranium.getPluginLoader().saveEntity(plugin);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -232,16 +232,16 @@ public class PluginServlet extends APIServlet {
                 }
                 JSONObject pluginJSON = new JSONObject(json);
 
-                MN2Plugin plugin = new MN2Plugin();
+                UPlugin plugin = new UPlugin();
                 plugin.setName(pluginJSON.getString("name"));
-                plugin.setType(MN2Plugin.PluginType.valueOf(pluginJSON.getString("type")));
+                plugin.setType(UPlugin.PluginType.valueOf(pluginJSON.getString("type")));
                 plugin.setBaseFolder(pluginJSON.getString("baseFolder"));
                 plugin.setConfigFolder(pluginJSON.getString("configFolder"));
 
                 JSONArray configs = pluginJSON.getJSONArray("configs");
                 for (int i = 0; i < configs.length(); i++) {
                     JSONObject object = configs.getJSONObject(i);
-                    MN2Plugin.PluginConfig pluginConfig = new MN2Plugin.PluginConfig();
+                    UPlugin.PluginConfig pluginConfig = new UPlugin.PluginConfig();
                     pluginConfig.set_id(new ObjectId());
                     pluginConfig.setName(object.getString("name"));
                     pluginConfig.setLocation(object.getString("location"));
@@ -249,7 +249,7 @@ public class PluginServlet extends APIServlet {
                     plugin.getConfigs().put(pluginConfig.get_id(), pluginConfig);
                 }
 
-                DatabaseResource.getPluginLoader().insertEntity(plugin);
+                Uranium.getPluginLoader().insertEntity(plugin);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -271,15 +271,15 @@ public class PluginServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                MN2Plugin plugin = DatabaseResource.getPluginLoader().loadEntity(new ObjectId(id));
+                UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(id));
                 if (plugin == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown Plugin "+id);
                     return jsonObject;
                 }
 
-                for (MN2ServerType serverType : DatabaseResource.getServerTypeLoader().getTypes()) {
-                    for (MN2Plugin plugin1 : serverType.getPlugins().keySet()) {
+                for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
+                    for (UPlugin plugin1 : serverType.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete plugin. Please remove from server type "+serverType.getName());
@@ -288,8 +288,8 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (MN2BungeeType bungeeType : DatabaseResource.getBungeeTypeLoader().getTypes()) {
-                    for (MN2Plugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
+                    for (UPlugin plugin1 : bungeeType.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete plugin. Please remove from bungee type "+bungeeType.getName());
@@ -298,7 +298,7 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                DatabaseResource.getPluginLoader().removeEntity(plugin);
+                Uranium.getPluginLoader().removeEntity(plugin);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

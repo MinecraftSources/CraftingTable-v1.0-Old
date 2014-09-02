@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.MN2Plugin" %>
+<%@ page import="io.minestack.db.entity.UPlugin" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Plugins</h1>
 
@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         <%
-            ArrayList<MN2Plugin> plugins = (ArrayList<MN2Plugin>) request.getAttribute("plugins");
-            for (MN2Plugin plugin : plugins) {
+            ArrayList<UPlugin> plugins = (ArrayList<UPlugin>) request.getAttribute("plugins");
+            for (UPlugin plugin : plugins) {
         %>
         <tr>
             <td><%=plugin.getName() %></td>

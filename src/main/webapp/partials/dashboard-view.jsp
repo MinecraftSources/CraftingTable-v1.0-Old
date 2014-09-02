@@ -1,5 +1,5 @@
-<%@ page import="io.minestack.db.entity.MN2Bungee" %>
-<%@ page import="io.minestack.db.entity.MN2Server" %>
+<%@ page import="io.minestack.db.entity.UBungee" %>
+<%@ page import="io.minestack.db.entity.UServer" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Dashboard</h1>
 
@@ -35,9 +35,9 @@
         <tbody>
         <%
 
-            ArrayList<MN2Bungee> bungees = (ArrayList<MN2Bungee>) request.getAttribute("bungees");
+            ArrayList<UBungee> bungees = (ArrayList<UBungee>) request.getAttribute("bungees");
 
-            for (MN2Bungee bungee : bungees) {
+            for (UBungee bungee : bungees) {
                 if (bungee.getLastUpdate() == 0) {
                     continue;
                 }
@@ -92,9 +92,9 @@
 
         <%
 
-            ArrayList<MN2Server> servers = (ArrayList<MN2Server>) request.getAttribute("servers");
+            ArrayList<UServer> servers = (ArrayList<UServer>) request.getAttribute("servers");
 
-            for (MN2Server server : servers) {
+            for (UServer server : servers) {
                 if (server.getLastUpdate() == 0) {
                     continue;
                 }

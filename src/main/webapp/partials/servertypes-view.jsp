@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.MN2ServerType" %>
+<%@ page import="io.minestack.db.entity.UServerType" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Server Types</h1>
 
@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         <%
-            ArrayList<MN2ServerType> servertypes = (ArrayList<MN2ServerType>) request.getAttribute("servertypes");
-            for (MN2ServerType serverType : servertypes) {
+            ArrayList<UServerType> servertypes = (ArrayList<UServerType>) request.getAttribute("servertypes");
+            for (UServerType serverType : servertypes) {
         %>
         <tr>
             <td><%=serverType.getName() %></td>
