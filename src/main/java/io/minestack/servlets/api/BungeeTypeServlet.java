@@ -1,10 +1,10 @@
 package io.minestack.servlets.api;
 
-import io.minestack.db.Uranium;
-import io.minestack.db.entity.UBungeeType;
-import io.minestack.db.entity.UNode;
-import io.minestack.db.entity.UPlugin;
-import io.minestack.db.entity.UServerType;
+import io.minestack.db.DoubleChest;
+import io.minestack.db.entity.DCBungeeType;
+import io.minestack.db.entity.DCNode;
+import io.minestack.db.entity.DCPlugin;
+import io.minestack.db.entity.DCServerType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
@@ -30,7 +30,7 @@ public class BungeeTypeServlet extends APIServlet {
             String id = req.getParameter("id");
 
             try {
-                UBungeeType bungeeType = Uranium.getBungeeTypeLoader().loadEntity(new ObjectId(id));
+                DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(id));
 
                 if (bungeeType == null) {
                     resp.setStatus(404);
@@ -42,7 +42,7 @@ public class BungeeTypeServlet extends APIServlet {
                 jsonObject.put("name", bungeeType.getName());
 
                 JSONArray serverTypes = new JSONArray();
-                for (UServerType serverType : bungeeType.getServerTypes().keySet()) {
+                for (DCServerType serverType : bungeeType.getServerTypes().keySet()) {
                     boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
                     JSONObject serverTypeJSON = new JSONObject();
                     serverTypeJSON.put("_id", serverType.get_id());
@@ -57,8 +57,8 @@ public class BungeeTypeServlet extends APIServlet {
                 jsonObject.put("serverTypes", serverTypes);
 
                 JSONArray plugins = new JSONArray();
-                for (UPlugin plugin : bungeeType.getPlugins().keySet()) {
-                    UPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
+                for (DCPlugin plugin : bungeeType.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -77,14 +77,14 @@ public class BungeeTypeServlet extends APIServlet {
         } else if (req.getRequestURI().endsWith("all")) {
             JSONArray bungeeTypes = new JSONArray();
 
-            for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
+            for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
                 JSONObject bungeeTypeJSON = new JSONObject();
 
                 bungeeTypeJSON.put("_id", bungeeType.get_id().toString());
                 bungeeTypeJSON.put("name", bungeeType.getName());
 
                 JSONArray serverTypes = new JSONArray();
-                for (UServerType serverType : bungeeType.getServerTypes().keySet()) {
+                for (DCServerType serverType : bungeeType.getServerTypes().keySet()) {
                     boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
                     JSONObject serverTypeJSON = new JSONObject();
                     serverTypeJSON.put("_id", serverType.get_id());
@@ -99,8 +99,8 @@ public class BungeeTypeServlet extends APIServlet {
                 bungeeTypeJSON.put("serverTypes", serverTypes);
 
                 JSONArray plugins = new JSONArray();
-                for (UPlugin plugin : bungeeType.getPlugins().keySet()) {
-                    UPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
+                for (DCPlugin plugin : bungeeType.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -138,13 +138,13 @@ public class BungeeTypeServlet extends APIServlet {
                 }
                 JSONObject bungeeTypeJSON = new JSONObject(json);
 
-                UBungeeType bungeeType = new UBungeeType();
+                DCBungeeType bungeeType = new DCBungeeType();
                 bungeeType.setName(bungeeTypeJSON.getString("name"));
 
                 JSONArray serverTypes = bungeeTypeJSON.getJSONArray("serverTypes");
                 for (int i = 0; i < serverTypes.length(); i++) {
                     JSONObject object = serverTypes.getJSONObject(i);
-                    UServerType serverType = Uranium.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (serverType == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
@@ -159,13 +159,13 @@ public class BungeeTypeServlet extends APIServlet {
                 JSONArray plugins = bungeeTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
-                    UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Plugin Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    UPlugin.PluginConfig pluginConfig = null;
+                    DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
@@ -187,7 +187,7 @@ public class BungeeTypeServlet extends APIServlet {
                     jsonObject.put("error", "No default server type");
                     return jsonObject;
                 }
-                Uranium.getBungeeTypeLoader().insertEntity(bungeeType);
+                DoubleChest.getBungeeTypeLoader().insertEntity(bungeeType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -217,10 +217,10 @@ public class BungeeTypeServlet extends APIServlet {
                 }
                 JSONObject bungeeTypeJSON = new JSONObject(json);
 
-                UBungeeType bungeeType = new UBungeeType();
+                DCBungeeType bungeeType = new DCBungeeType();
                 bungeeType.set_id(new ObjectId(bungeeTypeJSON.getString("_id")));
 
-                if (Uranium.getBungeeTypeLoader().loadEntity(bungeeType.get_id()) == null) {
+                if (DoubleChest.getBungeeTypeLoader().loadEntity(bungeeType.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown bungee type "+bungeeType.get_id());
                     return jsonObject;
@@ -231,7 +231,7 @@ public class BungeeTypeServlet extends APIServlet {
                 JSONArray serverTypes = bungeeTypeJSON.getJSONArray("serverTypes");
                 for (int i = 0; i < serverTypes.length(); i++) {
                     JSONObject object = serverTypes.getJSONObject(i);
-                    UServerType serverType = Uranium.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (serverType == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
@@ -251,13 +251,13 @@ public class BungeeTypeServlet extends APIServlet {
                 JSONArray plugins = bungeeTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
-                    UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Plugin Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    UPlugin.PluginConfig pluginConfig = null;
+                    DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
@@ -279,7 +279,7 @@ public class BungeeTypeServlet extends APIServlet {
                     jsonObject.put("error", "No default server type");
                     return jsonObject;
                 }
-                Uranium.getBungeeTypeLoader().saveEntity(bungeeType);
+                DoubleChest.getBungeeTypeLoader().saveEntity(bungeeType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -301,14 +301,14 @@ public class BungeeTypeServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                UBungeeType bungeeType = Uranium.getBungeeTypeLoader().loadEntity(new ObjectId(id));
+                DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(id));
                 if (bungeeType == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown Bungee Type "+id);
                     return jsonObject;
                 }
 
-                for (UNode node : Uranium.getNodeLoader().getNodes()) {
+                for (DCNode node : DoubleChest.getNodeLoader().getNodes()) {
                     if (node.getBungeeType() != null && node.getBungeeType().get_id().equals(bungeeType.get_id())) {
                         resp.setStatus(406);
                         jsonObject.put("error", "Cannot delete bungee type. Please remove from node "+node.getAddress());
@@ -316,7 +316,7 @@ public class BungeeTypeServlet extends APIServlet {
                     }
                 }
 
-                Uranium.getBungeeTypeLoader().removeEntity(bungeeType);
+                DoubleChest.getBungeeTypeLoader().removeEntity(bungeeType);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

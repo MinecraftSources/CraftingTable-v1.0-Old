@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.MN2World" %>
+<%@ page import="io.minestack.db.entity.DCWorld" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Worlds</h1>
 
@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         <%
-            ArrayList<MN2World> worlds = (ArrayList<MN2World>) request.getAttribute("worlds");
-            for (MN2World world : worlds) {
+            ArrayList<DCWorld> worlds = (ArrayList<DCWorld>) request.getAttribute("worlds");
+            for (DCWorld world : worlds) {
         %>
         <tr>
             <td><%=world.getName() %></td>

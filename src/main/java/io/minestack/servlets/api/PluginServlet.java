@@ -1,9 +1,9 @@
 package io.minestack.servlets.api;
 
-import io.minestack.db.Uranium;
-import io.minestack.db.entity.UBungeeType;
-import io.minestack.db.entity.UPlugin;
-import io.minestack.db.entity.UServerType;
+import io.minestack.db.DoubleChest;
+import io.minestack.db.entity.DCBungeeType;
+import io.minestack.db.entity.DCPlugin;
+import io.minestack.db.entity.DCServerType;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,19 +25,19 @@ public class PluginServlet extends APIServlet {
         JSONObject jsonObject = super.getJSON(req, resp);
 
         JSONArray pluginsJSON = new JSONArray();
-        ArrayList<UPlugin> plugins;
+        ArrayList<DCPlugin> plugins;
         if (req.getRequestURI().endsWith("bungee")) {
-            plugins = Uranium.getPluginLoader().loadPlugins(UPlugin.PluginType.BUNGEE);
+            plugins = DoubleChest.getPluginLoader().loadPlugins(DCPlugin.PluginType.BUNGEE);
         } else if (req.getRequestURI().endsWith("bukkit")) {
-            plugins = Uranium.getPluginLoader().loadPlugins(UPlugin.PluginType.BUKKIT);
+            plugins = DoubleChest.getPluginLoader().loadPlugins(DCPlugin.PluginType.BUKKIT);
         } else if (req.getRequestURI().endsWith("all")) {
-            plugins = Uranium.getPluginLoader().loadPlugins();
+            plugins = DoubleChest.getPluginLoader().loadPlugins();
         } else if (req.getRequestURI().endsWith("one")) {
             String id = req.getParameter("id");
 
             try {
 
-                UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(id));
+                DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(id));
 
                 if (plugin == null) {
                     resp.setStatus(404);
@@ -52,7 +52,7 @@ public class PluginServlet extends APIServlet {
                 jsonObject.put("configFolder", plugin.getConfigFolder());
 
                 JSONArray configs = new JSONArray();
-                for (UPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
+                for (DCPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
                     JSONObject configJSON = new JSONObject();
 
                     configJSON.put("_id", pluginConfig.get_id().toString());
@@ -76,7 +76,7 @@ public class PluginServlet extends APIServlet {
             jsonObject.put("error", "Plugin Method Not allowed");
             return jsonObject;
         }
-        for (UPlugin plugin : plugins) {
+        for (DCPlugin plugin : plugins) {
             JSONObject pluginJSON = new JSONObject();
 
             pluginJSON.put("_id", plugin.get_id().toString());
@@ -86,7 +86,7 @@ public class PluginServlet extends APIServlet {
             pluginJSON.put("configFolder", plugin.getConfigFolder());
 
             JSONArray configs = new JSONArray();
-            for (UPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
+            for (DCPlugin.PluginConfig pluginConfig : plugin.getConfigs().values()) {
                 JSONObject configJSON = new JSONObject();
 
                 configJSON.put("_id", pluginConfig.get_id().toString());
@@ -119,24 +119,24 @@ public class PluginServlet extends APIServlet {
                 }
                 JSONObject pluginJSON = new JSONObject(json);
 
-                UPlugin plugin = new UPlugin();
+                DCPlugin plugin = new DCPlugin();
                 plugin.set_id(new ObjectId(pluginJSON.getString("_id")));
 
-                if (Uranium.getPluginLoader().loadEntity(plugin.get_id()) == null) {
+                if (DoubleChest.getPluginLoader().loadEntity(plugin.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown plugin "+plugin.get_id());
                     return jsonObject;
                 }
 
                 plugin.setName(pluginJSON.getString("name"));
-                plugin.setType(UPlugin.PluginType.valueOf(pluginJSON.getString("type")));
+                plugin.setType(DCPlugin.PluginType.valueOf(pluginJSON.getString("type")));
                 plugin.setBaseFolder(pluginJSON.getString("baseFolder"));
                 plugin.setConfigFolder(pluginJSON.getString("configFolder"));
 
                 JSONArray configs = pluginJSON.getJSONArray("configs");
                 for (int i = 0; i < configs.length(); i++) {
                     JSONObject object = configs.getJSONObject(i);
-                    UPlugin.PluginConfig pluginConfig = new UPlugin.PluginConfig();
+                    DCPlugin.PluginConfig pluginConfig = new DCPlugin.PluginConfig();
                     if (object.has("_id")) {
                         pluginConfig.set_id(new ObjectId(object.getString("_id")));
                     } else {
@@ -148,10 +148,10 @@ public class PluginServlet extends APIServlet {
                     plugin.getConfigs().put(pluginConfig.get_id(), pluginConfig);
                 }
 
-                for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
-                    for (UPlugin plugin1 : serverType.getPlugins().keySet()) {
+                for (DCServerType serverType : DoubleChest.getServerTypeLoader().getTypes()) {
+                    for (DCPlugin plugin1 : serverType.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            UPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin1);
+                            DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
                                 jsonObject.put("error", "Cannot save plugin. Please remove from server type "+serverType.getName()+" before adding configs");
@@ -175,10 +175,10 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
-                    for (UPlugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
+                    for (DCPlugin plugin1 : bungeeType.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            UPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin1);
+                            DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
                                 jsonObject.put("error", "Cannot save plugin. Please remove from bungee type "+bungeeType.getName()+" before adding configs");
@@ -202,7 +202,7 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                Uranium.getPluginLoader().saveEntity(plugin);
+                DoubleChest.getPluginLoader().saveEntity(plugin);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -232,16 +232,16 @@ public class PluginServlet extends APIServlet {
                 }
                 JSONObject pluginJSON = new JSONObject(json);
 
-                UPlugin plugin = new UPlugin();
+                DCPlugin plugin = new DCPlugin();
                 plugin.setName(pluginJSON.getString("name"));
-                plugin.setType(UPlugin.PluginType.valueOf(pluginJSON.getString("type")));
+                plugin.setType(DCPlugin.PluginType.valueOf(pluginJSON.getString("type")));
                 plugin.setBaseFolder(pluginJSON.getString("baseFolder"));
                 plugin.setConfigFolder(pluginJSON.getString("configFolder"));
 
                 JSONArray configs = pluginJSON.getJSONArray("configs");
                 for (int i = 0; i < configs.length(); i++) {
                     JSONObject object = configs.getJSONObject(i);
-                    UPlugin.PluginConfig pluginConfig = new UPlugin.PluginConfig();
+                    DCPlugin.PluginConfig pluginConfig = new DCPlugin.PluginConfig();
                     pluginConfig.set_id(new ObjectId());
                     pluginConfig.setName(object.getString("name"));
                     pluginConfig.setLocation(object.getString("location"));
@@ -249,7 +249,7 @@ public class PluginServlet extends APIServlet {
                     plugin.getConfigs().put(pluginConfig.get_id(), pluginConfig);
                 }
 
-                Uranium.getPluginLoader().insertEntity(plugin);
+                DoubleChest.getPluginLoader().insertEntity(plugin);
 
                 return jsonObject;
             } catch (Exception e) {
@@ -271,15 +271,15 @@ public class PluginServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(id));
+                DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(id));
                 if (plugin == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown Plugin "+id);
                     return jsonObject;
                 }
 
-                for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
-                    for (UPlugin plugin1 : serverType.getPlugins().keySet()) {
+                for (DCServerType serverType : DoubleChest.getServerTypeLoader().getTypes()) {
+                    for (DCPlugin plugin1 : serverType.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete plugin. Please remove from server type "+serverType.getName());
@@ -288,8 +288,8 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
-                    for (UPlugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
+                    for (DCPlugin plugin1 : bungeeType.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete plugin. Please remove from bungee type "+bungeeType.getName());
@@ -298,7 +298,7 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                Uranium.getPluginLoader().removeEntity(plugin);
+                DoubleChest.getPluginLoader().removeEntity(plugin);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

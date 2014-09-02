@@ -1,5 +1,5 @@
-<%@ page import="io.minestack.db.entity.UBungee" %>
-<%@ page import="io.minestack.db.entity.UServer" %>
+<%@ page import="io.minestack.db.entity.DCBungee" %>
+<%@ page import="io.minestack.db.entity.DCServer" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Dashboard</h1>
 
@@ -35,9 +35,9 @@
         <tbody>
         <%
 
-            ArrayList<UBungee> bungees = (ArrayList<UBungee>) request.getAttribute("bungees");
+            ArrayList<DCBungee> bungees = (ArrayList<DCBungee>) request.getAttribute("bungees");
 
-            for (UBungee bungee : bungees) {
+            for (DCBungee bungee : bungees) {
                 if (bungee.getLastUpdate() == 0) {
                     continue;
                 }
@@ -92,9 +92,9 @@
 
         <%
 
-            ArrayList<UServer> servers = (ArrayList<UServer>) request.getAttribute("servers");
+            ArrayList<DCServer> servers = (ArrayList<DCServer>) request.getAttribute("servers");
 
-            for (UServer server : servers) {
+            for (DCServer server : servers) {
                 if (server.getLastUpdate() == 0) {
                     continue;
                 }

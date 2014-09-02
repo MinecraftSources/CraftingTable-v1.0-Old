@@ -1,10 +1,10 @@
 package io.minestack.servlets.api;
 
-import io.minestack.db.Uranium;
-import io.minestack.db.entity.UBungeeType;
-import io.minestack.db.entity.UPlugin;
-import io.minestack.db.entity.UServerType;
-import io.minestack.db.entity.UWorld;
+import io.minestack.db.DoubleChest;
+import io.minestack.db.entity.DCBungeeType;
+import io.minestack.db.entity.DCPlugin;
+import io.minestack.db.entity.DCServerType;
+import io.minestack.db.entity.DCWorld;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class ServerTypeServlet extends APIServlet {
 
         if (req.getRequestURI().endsWith("all")) {
             JSONArray serverTypes = new JSONArray();
-            for (UServerType serverType : Uranium.getServerTypeLoader().getTypes()) {
+            for (DCServerType serverType : DoubleChest.getServerTypeLoader().getTypes()) {
                 JSONObject serverTypeJSON = new JSONObject();
                 serverTypeJSON.put("_id", serverType.get_id().toString());
                 serverTypeJSON.put("name", serverType.getName());
@@ -36,8 +36,8 @@ public class ServerTypeServlet extends APIServlet {
                 serverTypeJSON.put("disabled", serverType.isDisabled());
 
                 JSONArray plugins = new JSONArray();
-                for (UPlugin plugin : serverType.getPlugins().keySet()) {
-                    UPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
+                for (DCPlugin plugin : serverType.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -49,7 +49,7 @@ public class ServerTypeServlet extends APIServlet {
                 serverTypeJSON.put("plugins", plugins);
 
                 JSONArray worlds = new JSONArray();
-                for (UWorld world : serverType.getWorlds()) {
+                for (DCWorld world : serverType.getWorlds()) {
                     JSONObject worldJSON = new JSONObject();
                     worldJSON.put("_id", world.get_id().toString());
                     if (world == serverType.getDefaultWorld()) {
@@ -70,7 +70,7 @@ public class ServerTypeServlet extends APIServlet {
         } else if (req.getRequestURI().endsWith("one")) {
             String id = req.getParameter("id");
             try {
-                UServerType serverType = Uranium.getServerTypeLoader().loadEntity(new ObjectId(id));
+                DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(id));
 
                 if (serverType == null) {
                     resp.setStatus(404);
@@ -86,8 +86,8 @@ public class ServerTypeServlet extends APIServlet {
                 jsonObject.put("disabled", serverType.isDisabled());
 
                 JSONArray plugins = new JSONArray();
-                for (UPlugin plugin : serverType.getPlugins().keySet()) {
-                    UPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
+                for (DCPlugin plugin : serverType.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -99,7 +99,7 @@ public class ServerTypeServlet extends APIServlet {
                 jsonObject.put("plugins", plugins);
 
                 JSONArray worlds = new JSONArray();
-                for (UWorld world : serverType.getWorlds()) {
+                for (DCWorld world : serverType.getWorlds()) {
                     JSONObject worldJSON = new JSONObject();
                     worldJSON.put("_id", world.get_id().toString());
                     if (world == serverType.getDefaultWorld()) {
@@ -140,7 +140,7 @@ public class ServerTypeServlet extends APIServlet {
                 }
                 JSONObject serverTypeJSON = new JSONObject(json);
 
-                UServerType serverType = new UServerType();
+                DCServerType serverType = new DCServerType();
 
                 serverType.setName(serverTypeJSON.getString("name"));
                 serverType.setPlayers(serverTypeJSON.getInt("players"));
@@ -151,13 +151,13 @@ public class ServerTypeServlet extends APIServlet {
                 JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
-                    UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Plugin "+object.getString("_id"));
                         return jsonObject;
                     }
-                    UPlugin.PluginConfig pluginConfig = null;
+                    DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
@@ -177,7 +177,7 @@ public class ServerTypeServlet extends APIServlet {
                 JSONArray worlds = serverTypeJSON.getJSONArray("worlds");
                 for (int i = 0; i < worlds.length(); i++) {
                     JSONObject object = worlds.getJSONObject(i);
-                    UWorld world = Uranium.getWorldLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCWorld world = DoubleChest.getWorldLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (world == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown World "+object.getString("_id"));
@@ -199,7 +199,7 @@ public class ServerTypeServlet extends APIServlet {
                     jsonObject.put("error", "No default world");
                     return jsonObject;
                 }
-                Uranium.getServerTypeLoader().insertEntity(serverType);
+                DoubleChest.getServerTypeLoader().insertEntity(serverType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -229,10 +229,10 @@ public class ServerTypeServlet extends APIServlet {
                 }
                 JSONObject serverTypeJSON = new JSONObject(json);
 
-                UServerType serverType = new UServerType();
+                DCServerType serverType = new DCServerType();
                 serverType.set_id(new ObjectId(serverTypeJSON.getString("_id")));
 
-                if (Uranium.getServerTypeLoader().loadEntity(serverType.get_id()) == null) {
+                if (DoubleChest.getServerTypeLoader().loadEntity(serverType.get_id()) == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown server type "+serverType.get_id());
                     return jsonObject;
@@ -247,13 +247,13 @@ public class ServerTypeServlet extends APIServlet {
                 JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
-                    UPlugin plugin = Uranium.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown Plugin "+object.getString("_id"));
                         return jsonObject;
                     }
-                    UPlugin.PluginConfig pluginConfig = null;
+                    DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId(object.getString("_configId")));
                         if (pluginConfig == null) {
@@ -273,7 +273,7 @@ public class ServerTypeServlet extends APIServlet {
                 JSONArray worlds = serverTypeJSON.getJSONArray("worlds");
                 for (int i = 0; i < worlds.length(); i++) {
                     JSONObject object = worlds.getJSONObject(i);
-                    UWorld world = Uranium.getWorldLoader().loadEntity(new ObjectId(object.getString("_id")));
+                    DCWorld world = DoubleChest.getWorldLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (world == null) {
                         resp.setStatus(400);
                         jsonObject.put("error", "Unknown World "+object.getString("_id"));
@@ -295,7 +295,7 @@ public class ServerTypeServlet extends APIServlet {
                     jsonObject.put("error", "No default world");
                     return jsonObject;
                 }
-                Uranium.getServerTypeLoader().saveEntity(serverType);
+                DoubleChest.getServerTypeLoader().saveEntity(serverType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -317,15 +317,15 @@ public class ServerTypeServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                UServerType serverType = Uranium.getServerTypeLoader().loadEntity(new ObjectId(id));
+                DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(id));
                 if (serverType == null) {
                     resp.setStatus(404);
                     jsonObject.put("error", "Unknown Server Type "+id);
                     return jsonObject;
                 }
 
-                for (UBungeeType bungeeType : Uranium.getBungeeTypeLoader().getTypes()) {
-                    for (UServerType serverType1 : bungeeType.getServerTypes().keySet()) {
+                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
+                    for (DCServerType serverType1 : bungeeType.getServerTypes().keySet()) {
                         if (serverType1.get_id().equals(serverType.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete server type. Please remove from bungee "+bungeeType.getName());
@@ -334,7 +334,7 @@ public class ServerTypeServlet extends APIServlet {
                     }
                 }
 
-                Uranium.getServerTypeLoader().removeEntity(serverType);
+                DoubleChest.getServerTypeLoader().removeEntity(serverType);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

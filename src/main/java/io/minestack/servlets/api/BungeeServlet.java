@@ -4,8 +4,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import io.minestack.db.Uranium;
-import io.minestack.db.entity.UBungee;
+import io.minestack.db.DoubleChest;
+import io.minestack.db.entity.DCBungee;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -27,7 +27,7 @@ public class BungeeServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            UBungee bungee = Uranium.getBungeeLoader().loadEntity(new ObjectId(id));
+            DCBungee bungee = DoubleChest.getBungeeLoader().loadEntity(new ObjectId(id));
 
             if (bungee == null) {
                 resp.setStatus(404);
@@ -65,7 +65,7 @@ public class BungeeServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            UBungee bungee = Uranium.getBungeeLoader().loadEntity(new ObjectId(id));
+            DCBungee bungee = DoubleChest.getBungeeLoader().loadEntity(new ObjectId(id));
             if (bungee == null) {
                 resp.setStatus(404);
                 jsonObject.put("error", "Unknown Bungee " + id + ". Cannot stop.");
@@ -95,7 +95,7 @@ public class BungeeServlet extends APIServlet {
                 }
             }
             bungee.setLastUpdate(0);
-            Uranium.getBungeeLoader().saveEntity(bungee);
+            DoubleChest.getBungeeLoader().saveEntity(bungee);
             return jsonObject;
         } catch (Exception ex) {
             resp.setStatus(400);

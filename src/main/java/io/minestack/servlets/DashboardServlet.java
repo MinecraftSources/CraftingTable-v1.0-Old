@@ -1,10 +1,10 @@
 package io.minestack.servlets;
 
 import io.minestack.DatabaseResource;
-import io.minestack.db.Uranium;
-import io.minestack.db.entity.UBungee;
-import io.minestack.db.entity.UNode;
-import io.minestack.db.entity.UServer;
+import io.minestack.db.DoubleChest;
+import io.minestack.db.entity.DCBungee;
+import io.minestack.db.entity.DCNode;
+import io.minestack.db.entity.DCServer;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -46,22 +46,22 @@ public class DashboardServlet extends HttpServlet {
         int maxMemory = 0;
         int usedMemory = 0;
 
-        ArrayList<UNode> nodes = Uranium.getNodeLoader().getNodes();
-        for (UNode node : nodes) {
+        ArrayList<DCNode> nodes = DoubleChest.getNodeLoader().getNodes();
+        for (DCNode node : nodes) {
             maxMemory += node.getRam();
         }
 
         req.setAttribute("maxMemory", maxMemory);
 
         int totalNodes = nodes.size();
-        int onlineNodes = Uranium.getNodeLoader().getOnlineNodes().size();
+        int onlineNodes = DoubleChest.getNodeLoader().getOnlineNodes().size();
 
         req.setAttribute("onlineNodes", onlineNodes);
         req.setAttribute("totalNodes", totalNodes);
 
-        ArrayList<UServer> servers = Uranium.getServerLoader().getServers();
+        ArrayList<DCServer> servers = DoubleChest.getServerLoader().getServers();
 
-        for (UServer server : servers) {
+        for (DCServer server : servers) {
             onlinePlayers += server.getPlayers().size();
             if (server.getServerType() != null) {
                 maxPlayers += server.getServerType().getPlayers();
@@ -69,7 +69,7 @@ public class DashboardServlet extends HttpServlet {
             }
         }
 
-        ArrayList<UBungee> bungees = Uranium.getBungeeLoader().getBungees();
+        ArrayList<DCBungee> bungees = DoubleChest.getBungeeLoader().getBungees();
 
         req.setAttribute("bungees", bungees);
         req.setAttribute("servers", servers);

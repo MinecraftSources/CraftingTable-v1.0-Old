@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/Silicon/servertype/edit";
+    $scope.edit = $location.path() == "/CraftingTable/servertype/edit";
     $scope.serverType = {};
     $scope.serverType.worlds = [];
     $scope.serverType.plugins = [];
@@ -18,7 +18,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/Silicon/servertype/list';
+        $window.location.href = '/CraftingTable/servertype/list';
     };
 
     $scope.needsWorld = function () {
@@ -54,9 +54,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/Silicon/api/servertype/delete?id=' + $scope.serverType._id).success(function (data) {
+            $http.delete('/CraftingTable/api/servertype/delete?id=' + $scope.serverType._id).success(function (data) {
                 console.log(data);
-                $window.location.href = '/Silicon/servertype/list';
+                $window.location.href = '/CraftingTable/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -65,14 +65,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/Silicon/api/servertype/save', $scope.serverType).success(function (data) {
-                $window.location.href = '/Silicon/servertype/list';
+            $http.put('/CraftingTable/api/servertype/save', $scope.serverType).success(function (data) {
+                $window.location.href = '/CraftingTable/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/Silicon/api/servertype/add', $scope.serverType).success(function (data) {
-                $window.location.href = '/Silicon/servertype/list';
+            $http.post('/CraftingTable/api/servertype/add', $scope.serverType).success(function (data) {
+                $window.location.href = '/CraftingTable/servertype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -148,11 +148,11 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     if ($scope.edit == true) {
 
 
-        $http.get('/Silicon/api/plugin/bukkit').success(function (data) {
+        $http.get('/CraftingTable/api/plugin/bukkit').success(function (data) {
             $scope.plugins = data.plugins;
-            $http.get('/Silicon/api/world/all').success(function (data) {
+            $http.get('/CraftingTable/api/world/all').success(function (data) {
                 $scope.worlds = data.worlds;
-                $http.get('/Silicon/api/servertype/one?id=' + $location.search().id).success(function (data) {
+                $http.get('/CraftingTable/api/servertype/one?id=' + $location.search().id).success(function (data) {
                     $scope.serverType = data;
                     for (var i = 0; i < $scope.serverType.plugins.length; i++) {
                         var typePlugin = $scope.serverType.plugins[i];
@@ -193,13 +193,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/Silicon/api/plugin/bukkit').success(function (data) {
+        $http.get('/CraftingTable/api/plugin/bukkit').success(function (data) {
             $scope.plugins = data.plugins;
         }).error(function (error) {
             $scope.error = error.error;
         });
 
-        $http.get('/Silicon/api/world/all').success(function (data) {
+        $http.get('/CraftingTable/api/world/all').success(function (data) {
             $scope.worlds = data.worlds;
         }).error(function (error) {
             $scope.error = error.error;

@@ -12,18 +12,18 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.error = undefined;
 
     $scope.stop = function() {
-        $http.put('/Silicon/api/bungee?id='+$location.search().id, $scope.bungee).success(function(data) {
-            $window.location.href = '/Silicon/index';
+        $http.put('/CraftingTable/api/bungee?id='+$location.search().id, $scope.bungee).success(function(data) {
+            $window.location.href = '/CraftingTable/index';
         }).error(function(error) {
             $scope.error = error.error;
         });
     };
 
     $scope.cancel = function() {
-        $window.location.href = '/Silicon/index';
+        $window.location.href = '/CraftingTable/index';
     };
 
-    $http.get('/Silicon/api/bungee?id='+$location.search().id).success(function(data) {
+    $http.get('/CraftingTable/api/bungee?id='+$location.search().id).success(function(data) {
         $scope.bungee = data;
     }).error(function(error) {
         $scope.error = error.error;

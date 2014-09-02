@@ -5,7 +5,7 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/Silicon/bungeetype/edit";
+    $scope.edit = $location.path() == "/CraftingTable/bungeetype/edit";
     $scope.bungeeType = {};
     $scope.bungeeType.serverTypes = [];
     $scope.bungeeType.plugins = [];
@@ -17,13 +17,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/Silicon/bungeetype/list';
+        $window.location.href = '/CraftingTable/bungeetype/list';
     };
 
     $scope.remove = function () {
         if ($scope.edit == true) {
-            $http.delete('/Silicon/api/bungeetype/delete?id=' + $scope.bungeeType._id).success(function (data) {
-                $window.location.href = '/Silicon/bungeetype/list';
+            $http.delete('/CraftingTable/api/bungeetype/delete?id=' + $scope.bungeeType._id).success(function (data) {
+                $window.location.href = '/CraftingTable/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -32,14 +32,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/Silicon/api/bungeetype/save', $scope.bungeeType).success(function (data) {
-                $window.location.href = '/Silicon/bungeetype/list';
+            $http.put('/CraftingTable/api/bungeetype/save', $scope.bungeeType).success(function (data) {
+                $window.location.href = '/CraftingTable/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/Silicon/api/bungeetype/add', $scope.bungeeType).success(function (data) {
-                $window.location.href = '/Silicon/bungeetype/list';
+            $http.post('/CraftingTable/api/bungeetype/add', $scope.bungeeType).success(function (data) {
+                $window.location.href = '/CraftingTable/bungeetype/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -143,11 +143,11 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit == true) {
-        $http.get('/Silicon/api/plugin/bungee').success(function (data) {
+        $http.get('/CraftingTable/api/plugin/bungee').success(function (data) {
             $scope.plugins = data.plugins;
-            $http.get('/Silicon/api/servertype/all').success(function (data) {
+            $http.get('/CraftingTable/api/servertype/all').success(function (data) {
                 $scope.serverTypes = data.serverTypes;
-                $http.get('/Silicon/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
+                $http.get('/CraftingTable/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
                     $scope.bungeeType = data;
                     for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
                         var typePlugin = $scope.bungeeType.plugins[i];
@@ -187,13 +187,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             $scope.error = error.error;
         });
     } else {
-        $http.get('/Silicon/api/plugin/bungee').success(function (data) {
+        $http.get('/CraftingTable/api/plugin/bungee').success(function (data) {
             $scope.plugins = data.plugins;
         }).error(function (error) {
             $scope.error = error.error;
         });
 
-        $http.get('/Silicon/api/servertype/all').success(function (data) {
+        $http.get('/CraftingTable/api/servertype/all').success(function (data) {
             $scope.serverTypes = data.serverTypes;
         }).error(function (error) {
             $scope.error = error.error;

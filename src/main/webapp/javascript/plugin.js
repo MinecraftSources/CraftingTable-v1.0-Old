@@ -5,21 +5,21 @@ formApp.config(function($locationProvider) {
 });
 
 formApp.controller('formController', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-    $scope.edit = $location.path() == "/Silicon/plugin/edit";
+    $scope.edit = $location.path() == "/CraftingTable/plugin/edit";
     $scope.plugin = {};
     $scope.plugin.configs = [];
     $scope.config = {};
     $scope.error = undefined;
 
     $scope.cancel = function() {
-        $window.location.href = '/Silicon/plugin/list';
+        $window.location.href = '/CraftingTable/plugin/list';
     };
 
     $scope.remove = function () {
         if ($scope.edit) {
-            $http.delete('/Silicon/api/plugin/delete?id=' + $scope.plugin._id).success(function (data) {
+            $http.delete('/CraftingTable/api/plugin/delete?id=' + $scope.plugin._id).success(function (data) {
                 console.log(data);
-                $window.location.href = '/Silicon/plugin/list';
+                $window.location.href = '/CraftingTable/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -28,14 +28,14 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.edit == true) {
-            $http.put('/Silicon/api/plugin/save', $scope.plugin).success(function (data) {
-                $window.location.href = '/Silicon/plugin/list';
+            $http.put('/CraftingTable/api/plugin/save', $scope.plugin).success(function (data) {
+                $window.location.href = '/CraftingTable/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
         } else {
-            $http.post('/Silicon/api/plugin/add', $scope.plugin).success(function (data) {
-                $window.location.href = '/Silicon/plugin/list';
+            $http.post('/CraftingTable/api/plugin/add', $scope.plugin).success(function (data) {
+                $window.location.href = '/CraftingTable/plugin/list';
             }).error(function (error) {
                 $scope.error = error.error;
             });
@@ -73,7 +73,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     };
 
     if ($scope.edit) {
-        $http.get('/Silicon/api/plugin/one?id='+$location.search().id).success(function (data) {
+        $http.get('/CraftingTable/api/plugin/one?id='+$location.search().id).success(function (data) {
             console.log(data);
             $scope.plugin = data;
         }).error(function (error) {

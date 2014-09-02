@@ -1,7 +1,7 @@
 package io.minestack.servlets;
 
 import io.minestack.DatabaseResource;
-import io.minestack.db.Uranium;
+import io.minestack.db.DoubleChest;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -37,7 +37,7 @@ public class NodesServlet extends HttpServlet {
 
         if (req.getRequestURI().endsWith("list")) {
             req.setAttribute("partial", "nodes-view");
-            req.setAttribute("nodes", Uranium.getNodeLoader().getNodes());
+            req.setAttribute("nodes", DoubleChest.getNodeLoader().getNodes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
             req.setAttribute("partial", "node-view");

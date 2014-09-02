@@ -2,7 +2,7 @@ package io.minestack;
 
 import com.mongodb.ServerAddress;
 import com.rabbitmq.client.Address;
-import io.minestack.db.Uranium;
+import io.minestack.db.DoubleChest;
 import lombok.extern.log4j.Log4j2;
 
 import java.net.UnknownHostException;
@@ -13,7 +13,7 @@ import java.util.List;
 public class DatabaseResource {
 
     public static void initDatabase() throws Exception {
-        if (Uranium.isNeedsInit()) {
+        if (DoubleChest.isNeedsInit()) {
             String hosts = System.getenv("MONGO_HOSTS");
 
             if (hosts == null) {
@@ -46,7 +46,7 @@ public class DatabaseResource {
                     log.error("Invalid RabbitMQ Address " + host);
                 }
             }
-            Uranium.initDatabase(mongoAddresses, rabbitAddresses, username, password);
+            DoubleChest.initDatabase(mongoAddresses, rabbitAddresses, username, password);
         }
     }
 
