@@ -18,7 +18,7 @@
             <http-method>DELETE</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>mn2</role-name>
+            <role-name>minestack</role-name>
         </auth-constraint>
 
         <user-data-constraint>

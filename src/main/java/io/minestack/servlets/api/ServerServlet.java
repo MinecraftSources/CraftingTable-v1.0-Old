@@ -94,7 +94,6 @@ public class ServerServlet extends APIServlet {
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }
-                dockerClient.removeContainerCmd(server.getContainerId()).exec();
             } catch (Exception ex) {
                 if (!(ex instanceof NotFoundException)) {
                     resp.setStatus(500);
