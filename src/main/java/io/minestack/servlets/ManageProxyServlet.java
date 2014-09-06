@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "ManageBungeeServlet",
+        name = "ManageProxyServlet",
         urlPatterns = {"/bungee/manage"})
 @Log4j2
-public class ManageBungeeServlet extends HttpServlet {
+public class ManageProxyServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {

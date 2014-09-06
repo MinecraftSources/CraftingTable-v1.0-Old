@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "BungeeTypesServlet",
+        name = "ProxyTypesServlet",
         urlPatterns = {"/bungeetype/list", "/bungeetype/edit", "/bungeetype/add"})
 @Log4j2
-public class BungeeTypesServlet extends HttpServlet {
+public class ProxyTypesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
@@ -37,7 +37,7 @@ public class BungeeTypesServlet extends HttpServlet {
 
         if (req.getRequestURI().endsWith("list")) {
             req.setAttribute("partial", "bungeetypes-view");
-            req.setAttribute("bungeetypes", DoubleChest.getBungeeTypeLoader().getTypes());
+            req.setAttribute("proxytypes", DoubleChest.getProxyTypeLoader().getTypes());
             requestDispatcher.forward(req, resp);
         } else if (req.getRequestURI().endsWith("edit")) {
             req.setAttribute("partial", "bungeetype-view");

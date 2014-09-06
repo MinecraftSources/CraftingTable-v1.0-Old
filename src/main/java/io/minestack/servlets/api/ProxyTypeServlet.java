@@ -1,10 +1,12 @@
 package io.minestack.servlets.api;
 
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungeeType;
 import io.minestack.db.entity.DCNode;
 import io.minestack.db.entity.DCPlugin;
-import io.minestack.db.entity.DCServerType;
+import io.minestack.db.entity.driver.DCDriver;
+import io.minestack.db.entity.proxy.DCProxyType;
+import io.minestack.db.entity.proxy.DCProxyTypeDriver;
+import io.minestack.db.entity.server.DCServerType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
@@ -17,10 +19,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 @WebServlet(
-        name = "APIBungeeTypeServlet",
+        name = "APIProxyTypeServlet",
         urlPatterns = {"/api/bungeetype/all", "/api/bungeetype/one", "/api/bungeetype/save", "/api/bungeetype/add", "/api/bungeetype/delete"})
 @Log4j2
-public class BungeeTypeServlet extends APIServlet {
+public class ProxyTypeServlet extends APIServlet {
 
     @Override
     public JSONObject getJSON(HttpServletRequest req, HttpServletResponse resp) {
@@ -30,24 +32,24 @@ public class BungeeTypeServlet extends APIServlet {
             String id = req.getParameter("id");
 
             try {
-                DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(id));
+                DCProxyType proxyType = DoubleChest.getProxyTypeLoader().loadEntity(new ObjectId(id));
 
-                if (bungeeType == null) {
+                if (proxyType == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown Bungee Type " + id);
+                    jsonObject.put("error", "Unknown Proxy Type " + id);
                     return jsonObject;
                 }
 
-                jsonObject.put("_id", bungeeType.get_id().toString());
-                jsonObject.put("name", bungeeType.getName());
+                jsonObject.put("_id", proxyType.get_id().toString());
+                jsonObject.put("name", proxyType.getName());
 
                 JSONArray serverTypes = new JSONArray();
-                for (DCServerType serverType : bungeeType.getServerTypes().keySet()) {
-                    boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
+                for (DCServerType serverType : proxyType.getServerTypes().keySet()) {
+                    boolean allowRejoin = proxyType.getServerTypes().get(serverType);
                     JSONObject serverTypeJSON = new JSONObject();
                     serverTypeJSON.put("_id", serverType.get_id());
                     serverTypeJSON.put("allowRejoin", allowRejoin);
-                    if (serverType == bungeeType.getDefaultType()) {
+                    if (serverType == proxyType.getDefaultType()) {
                         serverTypeJSON.put("isDefault", true);
                     } else {
                         serverTypeJSON.put("isDefault", false);
@@ -56,9 +58,13 @@ public class BungeeTypeServlet extends APIServlet {
                 }
                 jsonObject.put("serverTypes", serverTypes);
 
+                JSONObject driver = new JSONObject();
+                driver.put("driverName", proxyType.getDriver().getDriverName());
+
+                DCProxyTypeDriver proxyTypeDriver = (DCProxyTypeDriver) proxyType.getDriver();
                 JSONArray plugins = new JSONArray();
-                for (DCPlugin plugin : bungeeType.getPlugins().keySet()) {
-                    DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
+                for (DCPlugin plugin : proxyTypeDriver.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = proxyTypeDriver.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -67,7 +73,9 @@ public class BungeeTypeServlet extends APIServlet {
                     }
                     plugins.put(pluginJSON);
                 }
-                jsonObject.put("plugins", plugins);
+                driver.put("plugins", plugins);
+
+                jsonObject.put("driver", driver);
                 return jsonObject;
             } catch (Exception ex) {
                 resp.setStatus(400);
@@ -75,32 +83,36 @@ public class BungeeTypeServlet extends APIServlet {
                 return jsonObject;
             }
         } else if (req.getRequestURI().endsWith("all")) {
-            JSONArray bungeeTypes = new JSONArray();
+            JSONArray proxyTypes = new JSONArray();
 
-            for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
-                JSONObject bungeeTypeJSON = new JSONObject();
+            for (DCProxyType proxyType : DoubleChest.getProxyTypeLoader().getTypes()) {
+                JSONObject proxyTypeJSON = new JSONObject();
 
-                bungeeTypeJSON.put("_id", bungeeType.get_id().toString());
-                bungeeTypeJSON.put("name", bungeeType.getName());
+                proxyTypeJSON.put("_id", proxyType.get_id().toString());
+                proxyTypeJSON.put("name", proxyType.getName());
 
                 JSONArray serverTypes = new JSONArray();
-                for (DCServerType serverType : bungeeType.getServerTypes().keySet()) {
-                    boolean allowRejoin = bungeeType.getServerTypes().get(serverType);
+                for (DCServerType serverType : proxyType.getServerTypes().keySet()) {
+                    boolean allowRejoin = proxyType.getServerTypes().get(serverType);
                     JSONObject serverTypeJSON = new JSONObject();
                     serverTypeJSON.put("_id", serverType.get_id());
                     serverTypeJSON.put("allowRejoin", allowRejoin);
-                    if (serverType == bungeeType.getDefaultType()) {
+                    if (serverType == proxyType.getDefaultType()) {
                         serverTypeJSON.put("isDefault", true);
                     } else {
                         serverTypeJSON.put("isDefault", false);
                     }
                     serverTypes.put(serverTypeJSON);
                 }
-                bungeeTypeJSON.put("serverTypes", serverTypes);
+                proxyTypeJSON.put("serverTypes", serverTypes);
 
+                JSONObject driver = new JSONObject();
+                driver.put("driverName", proxyType.getDriver().getDriverName());
+
+                DCProxyTypeDriver dcProxyTypeDriver = (DCProxyTypeDriver) proxyType.getDriver();
                 JSONArray plugins = new JSONArray();
-                for (DCPlugin plugin : bungeeType.getPlugins().keySet()) {
-                    DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin);
+                for (DCPlugin plugin : dcProxyTypeDriver.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = dcProxyTypeDriver.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -109,12 +121,14 @@ public class BungeeTypeServlet extends APIServlet {
                     }
                     plugins.put(pluginJSON);
                 }
-                bungeeTypeJSON.put("plugins", plugins);
+                driver.put("plugins", plugins);
 
-                bungeeTypes.put(bungeeTypeJSON);
+                proxyTypeJSON.put("driver", driver);
+
+                proxyTypes.put(proxyTypeJSON);
             }
 
-            jsonObject.put("bungeeTypes", bungeeTypes);
+            jsonObject.put("proxyTypes", proxyTypes);
             return jsonObject;
         } else {
             resp.setStatus(405);
@@ -136,12 +150,12 @@ public class BungeeTypeServlet extends APIServlet {
                     jsonObject.put("error", "You must send something");
                     return jsonObject;
                 }
-                JSONObject bungeeTypeJSON = new JSONObject(json);
+                JSONObject proxyTypeJSON = new JSONObject(json);
 
-                DCBungeeType bungeeType = new DCBungeeType();
-                bungeeType.setName(bungeeTypeJSON.getString("name"));
+                DCProxyType proxyType = new DCProxyType();
+                proxyType.setName(proxyTypeJSON.getString("name"));
 
-                JSONArray serverTypes = bungeeTypeJSON.getJSONArray("serverTypes");
+                JSONArray serverTypes = proxyTypeJSON.getJSONArray("serverTypes");
                 for (int i = 0; i < serverTypes.length(); i++) {
                     JSONObject object = serverTypes.getJSONObject(i);
                     DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
@@ -150,44 +164,60 @@ public class BungeeTypeServlet extends APIServlet {
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    bungeeType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
+                    proxyType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
                     if (object.getBoolean("isDefault")) {
-                        bungeeType.setDefaultType(serverType);
+                        proxyType.setDefaultType(serverType);
                     }
                 }
 
-                JSONArray plugins = bungeeTypeJSON.getJSONArray("plugins");
+                JSONObject driver = proxyTypeJSON.getJSONObject("driver");
+                String driverName = driver.getString("driverName");
+
+                Class driverClass = DCDriver.getDrivers().get(driverName);
+
+                if (driverClass == null) {
+                    resp.setStatus(400);
+                    jsonObject.put("error", "Unknown Driver " + driverName);
+                    return jsonObject;
+                }
+
+                DCDriver dcDriver = DCDriver.getDrivers().get(driverName).newInstance();
+
+                DCProxyTypeDriver proxyTypeDriver = (DCProxyTypeDriver) dcDriver;
+                JSONArray plugins = driver.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
                     DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Plugin Type "+object.getString("_id"));
+                        jsonObject.put("error", "Unknown Plugin Type " + object.getString("_id"));
                         return jsonObject;
-                    }
+                        }
                     DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
                             resp.setStatus(400);
-                            jsonObject.put("error", "Unknown Plugin Config "+object.getString("_id")+" for plugin "+plugin.getName());
+                            jsonObject.put("error", "Unknown Plugin Config " + object.getString("_id") + " for plugin " + plugin.getName());
                             return jsonObject;
                         }
                     }
                     if (pluginConfig == null && plugin.getConfigs().size() > 0) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "There must be a config for "+plugin.getName());
+                        jsonObject.put("error", "There must be a config for " + plugin.getName());
                         return jsonObject;
                     }
-                    bungeeType.getPlugins().put(plugin, pluginConfig);
+                    proxyTypeDriver.getPlugins().put(plugin, pluginConfig);
                 }
 
-                if (bungeeType.getDefaultType() == null) {
+                proxyType.setDriver(dcDriver);
+
+                if (proxyType.getDefaultType() == null) {
                     resp.setStatus(400);
                     jsonObject.put("error", "No default server type");
                     return jsonObject;
                 }
-                DoubleChest.getBungeeTypeLoader().insertEntity(bungeeType);
+                DoubleChest.getProxyTypeLoader().insertEntity(proxyType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -215,20 +245,20 @@ public class BungeeTypeServlet extends APIServlet {
                     jsonObject.put("error", "You must send something");
                     return jsonObject;
                 }
-                JSONObject bungeeTypeJSON = new JSONObject(json);
+                JSONObject proxy = new JSONObject(json);
 
-                DCBungeeType bungeeType = new DCBungeeType();
-                bungeeType.set_id(new ObjectId(bungeeTypeJSON.getString("_id")));
+                DCProxyType proxyType = new DCProxyType();
+                proxyType.set_id(new ObjectId(proxy.getString("_id")));
 
-                if (DoubleChest.getBungeeTypeLoader().loadEntity(bungeeType.get_id()) == null) {
+                if (DoubleChest.getProxyTypeLoader().loadEntity(proxyType.get_id()) == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown bungee type "+bungeeType.get_id());
+                    jsonObject.put("error", "Unknown proxy type " + proxyType.get_id());
                     return jsonObject;
                 }
 
-                bungeeType.setName(bungeeTypeJSON.getString("name"));
+                proxyType.setName(proxy.getString("name"));
 
-                JSONArray serverTypes = bungeeTypeJSON.getJSONArray("serverTypes");
+                JSONArray serverTypes = proxy.getJSONArray("serverTypes");
                 for (int i = 0; i < serverTypes.length(); i++) {
                     JSONObject object = serverTypes.getJSONObject(i);
                     DCServerType serverType = DoubleChest.getServerTypeLoader().loadEntity(new ObjectId(object.getString("_id")));
@@ -237,49 +267,65 @@ public class BungeeTypeServlet extends APIServlet {
                         jsonObject.put("error", "Unknown Server Type "+object.getString("_id"));
                         return jsonObject;
                     }
-                    bungeeType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
+                    proxyType.getServerTypes().put(serverType, object.getBoolean("allowRejoin"));
                     if (object.getBoolean("isDefault")) {
-                        if (bungeeType.getDefaultType() != null) {
+                        if (proxyType.getDefaultType() != null) {
                             resp.setStatus(400);
-                            jsonObject.put("error", "Bungee Type already has a default server type "+bungeeType.getDefaultType().getName());
+                            jsonObject.put("error", "Proxy Type already has a default server type " + proxyType.getDefaultType().getName());
                             return jsonObject;
                         }
-                        bungeeType.setDefaultType(serverType);
+                        proxyType.setDefaultType(serverType);
                     }
                 }
 
-                JSONArray plugins = bungeeTypeJSON.getJSONArray("plugins");
+                JSONObject driver = proxy.getJSONObject("driver");
+                String driverName = driver.getString("driverName");
+
+                Class driverClass = DCDriver.getDrivers().get(driverName);
+
+                if (driverClass == null) {
+                    resp.setStatus(400);
+                    jsonObject.put("error", "Unknown Driver " + driverName);
+                    return jsonObject;
+                }
+
+                DCDriver dcDriver = DCDriver.getDrivers().get(driverName).newInstance();
+
+                DCProxyTypeDriver proxyTypeDriver = (DCProxyTypeDriver) dcDriver;
+                JSONArray plugins = driver.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
                     DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Plugin Type "+object.getString("_id"));
+                        jsonObject.put("error", "Unknown Plugin Type " + object.getString("_id"));
                         return jsonObject;
-                    }
+                        }
                     DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
                             resp.setStatus(400);
-                            jsonObject.put("error", "Unknown Plugin Config "+object.getString("_id")+" for plugin "+plugin.getName());
+                            jsonObject.put("error", "Unknown Plugin Config " + object.getString("_id") + " for plugin " + plugin.getName());
                             return jsonObject;
                         }
                     }
                     if (pluginConfig == null && plugin.getConfigs().size() > 0) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "There must be a config for "+plugin.getName());
+                        jsonObject.put("error", "There must be a config for " + plugin.getName());
                         return jsonObject;
                     }
-                    bungeeType.getPlugins().put(plugin, pluginConfig);
+                    proxyTypeDriver.getPlugins().put(plugin, pluginConfig);
                 }
 
-                if (bungeeType.getDefaultType() == null) {
+                proxyType.setDriver(dcDriver);
+
+                if (proxyType.getDefaultType() == null) {
                     resp.setStatus(400);
                     jsonObject.put("error", "No default server type");
                     return jsonObject;
                 }
-                DoubleChest.getBungeeTypeLoader().saveEntity(bungeeType);
+                DoubleChest.getProxyTypeLoader().saveEntity(proxyType);
                 return jsonObject;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -301,22 +347,22 @@ public class BungeeTypeServlet extends APIServlet {
         if (req.getRequestURI().endsWith("delete")) {
             String id = req.getParameter("id");
             try {
-                DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(id));
-                if (bungeeType == null) {
+                DCProxyType proxyType = DoubleChest.getProxyTypeLoader().loadEntity(new ObjectId(id));
+                if (proxyType == null) {
                     resp.setStatus(404);
-                    jsonObject.put("error", "Unknown Bungee Type "+id);
+                    jsonObject.put("error", "Unknown Proxy Type " + id);
                     return jsonObject;
                 }
 
                 for (DCNode node : DoubleChest.getNodeLoader().getNodes()) {
-                    if (node.getBungeeType() != null && node.getBungeeType().get_id().equals(bungeeType.get_id())) {
+                    if (node.getProxyType() != null && node.getProxyType().get_id().equals(proxyType.get_id())) {
                         resp.setStatus(406);
-                        jsonObject.put("error", "Cannot delete bungee type. Please remove from node "+node.getAddress());
+                        jsonObject.put("error", "Cannot delete proxy type. Please remove from node " + node.getAddress());
                         return jsonObject;
                     }
                 }
 
-                DoubleChest.getBungeeTypeLoader().removeEntity(bungeeType);
+                DoubleChest.getProxyTypeLoader().removeEntity(proxyType);
                 return jsonObject;
             } catch (Exception ex) {
                 ex.printStackTrace();

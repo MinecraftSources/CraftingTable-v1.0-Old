@@ -8,7 +8,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.edit = $location.path() == "/CraftingTable/bungeetype/edit";
     $scope.bungeeType = {};
     $scope.bungeeType.serverTypes = [];
-    $scope.bungeeType.plugins = [];
+    $scope.bungeeType.driver = {};
+    $scope.bungeeType.driver.driverName = "bungeeType";
+    $scope.bungeeType.driver.plugins = [];
     $scope.serverType = {};
     $scope.plugin = {};
     $scope.pluginConfig = {};
@@ -113,8 +115,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
                 return;
             }
         }
-        for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
-            var plugin = $scope.bungeeType.plugins[i];
+        for (var i = 0; i < $scope.bungeeType.driver.plugins.length; i++) {
+            var plugin = $scope.bungeeType.driver.plugins[i];
             if (plugin._id == $scope.plugin._id) {
                 return;
             }
@@ -127,16 +129,16 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             plugin._configId = $scope.pluginConfig._id;
             plugin.config = $scope.pluginConfig.name;
         }
-        $scope.bungeeType.plugins.push(plugin);
+        $scope.bungeeType.driver.plugins.push(plugin);
         $scope.plugin = {};
         $scope.pluginConfig = {};
     };
     $scope.removePlugin = function (plugin) {
 
-        for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
-            var pluginOld = $scope.bungeeType.plugins[i];
+        for (var i = 0; i < $scope.bungeeType.driver.plugins.length; i++) {
+            var pluginOld = $scope.bungeeType.driver.plugins[i];
             if (pluginOld._id == plugin._id) {
-                $scope.bungeeType.plugins.splice(i, 1);
+                $scope.bungeeType.driver.plugins.splice(i, 1);
                 break;
             }
         }
@@ -149,8 +151,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
                 $scope.serverTypes = data.serverTypes;
                 $http.get('/CraftingTable/api/bungeetype/one?id=' + $location.search().id).success(function (data) {
                     $scope.bungeeType = data;
-                    for (var i = 0; i < $scope.bungeeType.plugins.length; i++) {
-                        var typePlugin = $scope.bungeeType.plugins[i];
+                    for (var i = 0; i < $scope.bungeeType.driver.plugins.length; i++) {
+                        var typePlugin = $scope.bungeeType.driver.plugins[i];
                         typePlugin.name = undefined;
                         typePlugin.config = undefined;
                         for (var j = 0; j < $scope.plugins.length; j++) {

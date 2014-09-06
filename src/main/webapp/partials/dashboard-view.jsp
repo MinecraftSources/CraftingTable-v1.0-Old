@@ -1,5 +1,5 @@
-<%@ page import="io.minestack.db.entity.DCBungee" %>
-<%@ page import="io.minestack.db.entity.DCServer" %>
+<%@ page import="io.minestack.db.entity.proxy.DCProxy" %>
+<%@ page import="io.minestack.db.entity.server.DCServer" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Dashboard</h1>
 
@@ -35,27 +35,27 @@
         <tbody>
         <%
 
-            ArrayList<DCBungee> bungees = (ArrayList<DCBungee>) request.getAttribute("bungees");
+            ArrayList<DCProxy> proxies = (ArrayList<DCProxy>) request.getAttribute("proxies");
 
-            for (DCBungee bungee : bungees) {
-                if (bungee.getLastUpdate() == 0) {
+            for (DCProxy proxy : proxies) {
+                if (proxy.getLastUpdate() == 0) {
                     continue;
                 }
         %>
         <tr>
         <%
-                    if (bungee.getBungeeType() != null) {
+                    if (proxy.getProxyType() != null) {
         %>
-                        <td><%=bungee.getBungeeType().getName() %></td>
+                        <td><%=proxy.getProxyType().getName() %></td>
         <%
                     } else {
         %>
                         <td>NULL</td>
         <%
                     }
-                    if (bungee.getNode() != null) {
+                    if (proxy.getNode() != null) {
         %>
-                        <td><%=bungee.getNode().getAddress() %></td>
+                        <td><%=proxy.getNode().getAddress() %></td>
         <%
                     } else {
         %>
@@ -63,7 +63,7 @@
         <%
                     }
         %>
-        <td><a href="${pageContext.request.contextPath}/bungee/manage?id=<%=bungee.get_id().toString() %>">
+        <td><a href="${pageContext.request.contextPath}/bungee/manage?id=<%=proxy.get_id().toString() %>">
             <button type="button" class="btn btn-default btn-xs">
                 <span class="glyphicon glyphicon glyphicon-pencil"></span></button>
         </a></td>

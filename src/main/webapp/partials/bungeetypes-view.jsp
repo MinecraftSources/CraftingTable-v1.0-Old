@@ -1,6 +1,6 @@
-<%@ page import="io.minestack.db.entity.DCBungeeType" %>
 <%@ page import="java.util.ArrayList" %>
-<h1 class="page-header">Bungee Types</h1>
+<%@ page import="io.minestack.db.entity.proxy.DCProxyType" %>
+<h1 class="page-header">Proxy Types</h1>
 
 <div>
     <a href="${pageContext.request.contextPath}/bungeetype/add"><button type="button" class="btn btn-primary btn-lg">
@@ -16,13 +16,13 @@
         </thead>
         <tbody>
         <%
-            ArrayList<DCBungeeType> bungeetypes = (ArrayList<DCBungeeType>) request.getAttribute("bungeetypes");
-            for (DCBungeeType bungeeType : bungeetypes) {
+            ArrayList<DCProxyType> proxytypes = (ArrayList<DCProxyType>) request.getAttribute("proxytypes");
+            for (DCProxyType proxyType : proxytypes) {
         %>
             <tr>
-                <td><%=bungeeType.getName() %></td>
-                <td><%=bungeeType.get_id().toString() %></td>
-                <td><a href="${pageContext.request.contextPath}/bungeetype/edit?id=<%=bungeeType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
+                <td><%=proxyType.getName() %></td>
+                <td><%=proxyType.get_id().toString() %></td>
+                <td><a href="${pageContext.request.contextPath}/bungeetype/edit?id=<%=proxyType.get_id().toString() %>"><button type="button" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon glyphicon-pencil"></span></button></a></td>
             </tr>
         <%

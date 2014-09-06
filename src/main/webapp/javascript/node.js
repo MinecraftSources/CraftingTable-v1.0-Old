@@ -45,9 +45,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     $scope.submit = function () {
         if ($scope.bungeeType != null) {
-            $scope.node._bungeeType = $scope.bungeeType._id;
+            $scope.node._proxyType = $scope.bungeeType._id;
         } else {
-            $scope.node._bungeeType = "";
+            $scope.node._proxyType = "";
         }
         if ($scope.edit == true) {
             $http.put('/CraftingTable/api/node/save', $scope.node).success(function (data) {
@@ -76,13 +76,13 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
 
     if ($scope.edit) {
         $http.get('/CraftingTable/api/bungeetype/all').success(function (data) {
-            $scope.bungeetypes = data.bungeeTypes;
+            $scope.bungeetypes = data.proxyTypes;
             $http.get('/CraftingTable/api/node/one?id='+$location.search().id).success(function(data) {
                 $scope.node = data;
 
                 for (var i = 0; i < $scope.bungeetypes.length; i++) {
                     var bungeeType = $scope.bungeetypes[i];
-                    if(bungeeType._id == $scope.node._bungeeType) {
+                    if(bungeeType._id == $scope.node._proxyType) {
                         $scope.bungeeType = bungeeType;
                         break;
                     }
@@ -96,7 +96,7 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     } else {
         $http.get('/CraftingTable/api/bungeetype/all').success(function (data) {
             console.log(data);
-            $scope.bungeetypes = data.bungeeTypes;
+            $scope.bungeetypes = data.proxyTypes;
         }).error(function (error) {
             $scope.error = error.error;
         });

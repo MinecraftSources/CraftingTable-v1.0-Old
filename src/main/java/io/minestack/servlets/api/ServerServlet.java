@@ -5,7 +5,7 @@ import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCServer;
+import io.minestack.db.entity.server.DCServer;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;

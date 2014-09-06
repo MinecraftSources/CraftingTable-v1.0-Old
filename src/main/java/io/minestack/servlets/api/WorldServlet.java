@@ -1,8 +1,8 @@
 package io.minestack.servlets.api;
 
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCServerType;
 import io.minestack.db.entity.DCWorld;
+import io.minestack.db.entity.server.DCServerType;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -5,7 +5,7 @@ import com.github.dockerjava.api.NotFoundException;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungee;
+import io.minestack.db.entity.proxy.DCProxy;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-        name = "APIBungeeServlet",
+        name = "APIProxyServlet",
         urlPatterns = {"/api/bungee"})
 @Log4j2
-public class BungeeServlet extends APIServlet {
+public class ProxyServlet extends APIServlet {
 
     @Override
     public JSONObject getJSON(HttpServletRequest req, HttpServletResponse resp) {
@@ -27,33 +27,33 @@ public class BungeeServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            DCBungee bungee = DoubleChest.getBungeeLoader().loadEntity(new ObjectId(id));
+            DCProxy proxy = DoubleChest.getProxyLoader().loadEntity(new ObjectId(id));
 
-            if (bungee == null) {
+            if (proxy == null) {
                 resp.setStatus(404);
-                jsonObject.put("error", "Unknown Bungee " + id + ".");
+                jsonObject.put("error", "Unknown Proxy " + id + ".");
                 return jsonObject;
             }
 
-            jsonObject.put("_id", bungee.get_id().toString());
+            jsonObject.put("_id", proxy.get_id().toString());
 
-            if (bungee.getBungeeType() != null) {
-                JSONObject bungeetype = new JSONObject();
-                bungeetype.put("_id", bungee.getBungeeType().get_id().toString());
-                bungeetype.put("name", bungee.getBungeeType().getName());
-                jsonObject.put("_bungeetype", bungeetype);
+            if (proxy.getProxyType() != null) {
+                JSONObject proxytype = new JSONObject();
+                proxytype.put("_id", proxy.getProxyType().get_id().toString());
+                proxytype.put("name", proxy.getProxyType().getName());
+                jsonObject.put("_proxytype", proxytype);
             }
 
-            if (bungee.getNode() != null) {
+            if (proxy.getNode() != null) {
                 JSONObject node = new JSONObject();
-                node.put("_id", bungee.getNode().get_id());
-                node.put("address", bungee.getNode().getAddress());
+                node.put("_id", proxy.getNode().get_id());
+                node.put("address", proxy.getNode().getAddress());
                 jsonObject.put("_node", node);
             }
             return jsonObject;
         } catch (Exception ex) {
             resp.setStatus(400);
-            jsonObject.put("error", "Invalid Bungee ID " + id);
+            jsonObject.put("error", "Invalid Proxy ID " + id);
             return jsonObject;
         }
     }
@@ -65,26 +65,26 @@ public class BungeeServlet extends APIServlet {
         String id = req.getParameter("id");
 
         try {
-            DCBungee bungee = DoubleChest.getBungeeLoader().loadEntity(new ObjectId(id));
-            if (bungee == null) {
+            DCProxy proxy = DoubleChest.getProxyLoader().loadEntity(new ObjectId(id));
+            if (proxy == null) {
                 resp.setStatus(404);
-                jsonObject.put("error", "Unknown Bungee " + id + ". Cannot stop.");
+                jsonObject.put("error", "Unknown Proxy " + id + ". Cannot stop.");
                 return jsonObject;
             }
 
-            if (bungee.getNode() == null) {
+            if (proxy.getNode() == null) {
                 resp.setStatus(500);
-                jsonObject.put("error", "Bungee has a null node. Cannot stop.");
+                jsonObject.put("error", "Proxy has a null node. Cannot stop.");
                 return jsonObject;
             }
             DockerClientConfig.DockerClientConfigBuilder config = DockerClientConfig.createDefaultConfigBuilder();
             config.withVersion("1.13");
-            config.withUri("http://" + bungee.getNode().getAddress() + ":4243");
+            config.withUri("http://" + proxy.getNode().getAddress() + ":4243");
             DockerClient dockerClient = new DockerClientImpl(config.build());
             try {
-                dockerClient.inspectContainerCmd(bungee.getContainerId()).exec();
+                dockerClient.inspectContainerCmd(proxy.getContainerId()).exec();
                 try {
-                    dockerClient.killContainerCmd(bungee.getContainerId()).exec();
+                    dockerClient.killContainerCmd(proxy.getContainerId()).exec();
                 } catch (Exception ignored) {
                 }
             } catch (Exception ex) {
@@ -94,12 +94,12 @@ public class BungeeServlet extends APIServlet {
                     return jsonObject;
                 }
             }
-            bungee.setLastUpdate(0);
-            DoubleChest.getBungeeLoader().saveEntity(bungee);
+            proxy.setLastUpdate(0);
+            DoubleChest.getProxyLoader().saveEntity(proxy);
             return jsonObject;
         } catch (Exception ex) {
             resp.setStatus(400);
-            jsonObject.put("error", "Invalid Bungee ID " + id + ". Cannot stop.");
+            jsonObject.put("error", "Invalid Proxy ID " + id + ". Cannot stop.");
             return jsonObject;
         }
 

@@ -1,9 +1,11 @@
 package io.minestack.servlets.api;
 
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungeeType;
 import io.minestack.db.entity.DCPlugin;
-import io.minestack.db.entity.DCServerType;
+import io.minestack.db.entity.proxy.DCProxyType;
+import io.minestack.db.entity.proxy.DCProxyTypeDriver;
+import io.minestack.db.entity.server.DCServerType;
+import io.minestack.db.entity.server.DCServerTypeDriver;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -149,9 +151,10 @@ public class PluginServlet extends APIServlet {
                 }
 
                 for (DCServerType serverType : DoubleChest.getServerTypeLoader().getTypes()) {
-                    for (DCPlugin plugin1 : serverType.getPlugins().keySet()) {
+                    DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) serverType.getDriver();
+                    for (DCPlugin plugin1 : serverTypeDriver.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin1);
+                            DCPlugin.PluginConfig pluginConfig = serverTypeDriver.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
                                 jsonObject.put("error", "Cannot save plugin. Please remove from server type "+serverType.getName()+" before adding configs");
@@ -175,13 +178,14 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
-                    for (DCPlugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (DCProxyType proxyType : DoubleChest.getProxyTypeLoader().getTypes()) {
+                    DCProxyTypeDriver proxyTypeDriver = (DCProxyTypeDriver) proxyType.getDriver();
+                    for (DCPlugin plugin1 : proxyTypeDriver.getPlugins().keySet()) {
                         if (plugin.get_id().equals(plugin1.get_id())) {
-                            DCPlugin.PluginConfig pluginConfig = bungeeType.getPlugins().get(plugin1);
+                            DCPlugin.PluginConfig pluginConfig = proxyTypeDriver.getPlugins().get(plugin1);
                             if (pluginConfig == null && plugin.getConfigs().isEmpty() == false) {
                                 resp.setStatus(406);
-                                jsonObject.put("error", "Cannot save plugin. Please remove from bungee type "+bungeeType.getName()+" before adding configs");
+                                jsonObject.put("error", "Cannot save plugin. Please remove from bungee type "+proxyType.getName()+" before adding configs");
                                 return jsonObject;
                             }
                             if (pluginConfig != null) {
@@ -193,7 +197,7 @@ public class PluginServlet extends APIServlet {
                                 }
                                 if (hasConfig == false) {
                                     resp.setStatus(406);
-                                    jsonObject.put("error", "Cannot save plugin. Please remove from bungee type " + bungeeType.getName() + " before changing configs");
+                                    jsonObject.put("error", "Cannot save plugin. Please remove from bungee type " + proxyType.getName() + " before changing configs");
                                     return jsonObject;
                                 }
                             }
@@ -279,7 +283,8 @@ public class PluginServlet extends APIServlet {
                 }
 
                 for (DCServerType serverType : DoubleChest.getServerTypeLoader().getTypes()) {
-                    for (DCPlugin plugin1 : serverType.getPlugins().keySet()) {
+                    DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) serverType.getDriver();
+                    for (DCPlugin plugin1 : serverTypeDriver.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
                             jsonObject.put("error", "Cannot delete plugin. Please remove from server type "+serverType.getName());
@@ -288,11 +293,12 @@ public class PluginServlet extends APIServlet {
                     }
                 }
 
-                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
-                    for (DCPlugin plugin1 : bungeeType.getPlugins().keySet()) {
+                for (DCProxyType proxyType : DoubleChest.getProxyTypeLoader().getTypes()) {
+                    DCProxyTypeDriver proxyTypeDriver = (DCProxyTypeDriver) proxyType.getDriver();
+                    for (DCPlugin plugin1 : proxyTypeDriver.getPlugins().keySet()) {
                         if (plugin1.get_id().equals(plugin.get_id())) {
                             resp.setStatus(406);
-                            jsonObject.put("error", "Cannot delete plugin. Please remove from bungee type "+bungeeType.getName());
+                            jsonObject.put("error", "Cannot delete plugin. Please remove from bungee type "+proxyType.getName());
                             return jsonObject;
                         }
                     }

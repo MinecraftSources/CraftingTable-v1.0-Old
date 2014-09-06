@@ -45,7 +45,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="plugin in serverType.plugins">
+                <tr ng-repeat="plugin in serverType.driver.plugins">
                     <td>{{ plugin.name }}</td>
                     <td>{{ plugin.config }}</td>
                     <td><button ng-click="removePlugin(plugin)" type="button" class="btn btn-danger btn-xms">

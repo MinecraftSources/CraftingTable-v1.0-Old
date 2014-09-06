@@ -1,4 +1,4 @@
-<%@ page import="io.minestack.db.entity.DCServerType" %>
+<%@ page import="io.minestack.db.entity.server.DCServerType" %>
 <%@ page import="java.util.ArrayList" %>
 <h1 class="page-header">Server Types</h1>
 

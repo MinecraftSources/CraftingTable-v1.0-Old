@@ -8,7 +8,9 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
     $scope.edit = $location.path() == "/CraftingTable/servertype/edit";
     $scope.serverType = {};
     $scope.serverType.worlds = [];
-    $scope.serverType.plugins = [];
+    $scope.serverType.driver = {};
+    $scope.serverType.driver.driverName = "bukkitType";
+    $scope.serverType.driver.plugins = [];
     $scope.serverType.disabled = false;
     $scope.plugins = [];
     $scope.worlds = [];
@@ -116,8 +118,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
                 return;
             }
         }
-        for (var i = 0; i < $scope.serverType.plugins.length; i++) {
-            var plugin = $scope.serverType.plugins[i];
+        for (var i = 0; i < $scope.serverType.driver.plugins.length; i++) {
+            var plugin = $scope.serverType.driver.plugins[i];
             if (plugin._id == $scope.plugin._id) {
                 return;
             }
@@ -130,16 +132,16 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
             plugin._configId = $scope.config._id;
             plugin.config = $scope.config.name;
         }
-        $scope.serverType.plugins.push(plugin);
+        $scope.serverType.driver.plugins.push(plugin);
         $scope.plugin = {};
         $scope.config = {};
     };
     $scope.removePlugin = function (plugin) {
 
-        for (var i = 0; i < $scope.serverType.plugins.length; i++) {
-            var pluginOld = $scope.serverType.plugins[i];
+        for (var i = 0; i < $scope.serverType.driver.plugins.length; i++) {
+            var pluginOld = $scope.serverType.driver.plugins[i];
             if (pluginOld._id == plugin._id) {
-                $scope.serverType.plugins.splice(i, 1);
+                $scope.serverType.driver.plugins.splice(i, 1);
                 break;
             }
         }
@@ -154,8 +156,8 @@ formApp.controller('formController', ['$scope', '$http', '$location', '$window',
                 $scope.worlds = data.worlds;
                 $http.get('/CraftingTable/api/servertype/one?id=' + $location.search().id).success(function (data) {
                     $scope.serverType = data;
-                    for (var i = 0; i < $scope.serverType.plugins.length; i++) {
-                        var typePlugin = $scope.serverType.plugins[i];
+                    for (var i = 0; i < $scope.serverType.driver.plugins.length; i++) {
+                        var typePlugin = $scope.serverType.driver.plugins[i];
                         typePlugin.name = undefined;
                         typePlugin.config = undefined;
                         for (var j = 0; j < $scope.plugins.length; j++) {

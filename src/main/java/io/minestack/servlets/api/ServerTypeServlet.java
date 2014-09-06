@@ -1,10 +1,12 @@
 package io.minestack.servlets.api;
 
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungeeType;
 import io.minestack.db.entity.DCPlugin;
-import io.minestack.db.entity.DCServerType;
 import io.minestack.db.entity.DCWorld;
+import io.minestack.db.entity.driver.DCDriver;
+import io.minestack.db.entity.proxy.DCProxyType;
+import io.minestack.db.entity.server.DCServerType;
+import io.minestack.db.entity.server.DCServerTypeDriver;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,9 +37,13 @@ public class ServerTypeServlet extends APIServlet {
                 serverTypeJSON.put("amount", serverType.getAmount());
                 serverTypeJSON.put("disabled", serverType.isDisabled());
 
+                JSONObject driver = new JSONObject();
+                driver.put("driverName", serverType.getDriver().getDriverName());
+
+                DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) serverType.getDriver();
                 JSONArray plugins = new JSONArray();
-                for (DCPlugin plugin : serverType.getPlugins().keySet()) {
-                    DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
+                for (DCPlugin plugin : serverTypeDriver.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = serverTypeDriver.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -46,7 +52,9 @@ public class ServerTypeServlet extends APIServlet {
                     }
                     plugins.put(pluginJSON);
                 }
-                serverTypeJSON.put("plugins", plugins);
+                driver.put("plugins", plugins);
+
+                serverTypeJSON.put("driver", driver);
 
                 JSONArray worlds = new JSONArray();
                 for (DCWorld world : serverType.getWorlds()) {
@@ -85,9 +93,13 @@ public class ServerTypeServlet extends APIServlet {
                 jsonObject.put("amount", serverType.getAmount());
                 jsonObject.put("disabled", serverType.isDisabled());
 
+                JSONObject driver = new JSONObject();
+                driver.put("driverName", serverType.getDriver().getDriverName());
+
+                DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) serverType.getDriver();
                 JSONArray plugins = new JSONArray();
-                for (DCPlugin plugin : serverType.getPlugins().keySet()) {
-                    DCPlugin.PluginConfig pluginConfig = serverType.getPlugins().get(plugin);
+                for (DCPlugin plugin : serverTypeDriver.getPlugins().keySet()) {
+                    DCPlugin.PluginConfig pluginConfig = serverTypeDriver.getPlugins().get(plugin);
 
                     JSONObject pluginJSON = new JSONObject();
                     pluginJSON.put("_id", plugin.get_id().toString());
@@ -96,7 +108,9 @@ public class ServerTypeServlet extends APIServlet {
                     }
                     plugins.put(pluginJSON);
                 }
-                jsonObject.put("plugins", plugins);
+                driver.put("plugins", plugins);
+
+                jsonObject.put("driver", driver);
 
                 JSONArray worlds = new JSONArray();
                 for (DCWorld world : serverType.getWorlds()) {
@@ -148,31 +162,46 @@ public class ServerTypeServlet extends APIServlet {
                 serverType.setAmount(serverTypeJSON.getInt("amount"));
                 serverType.setDisabled(serverTypeJSON.getBoolean("disabled"));
 
-                JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
+                JSONObject driver = serverTypeJSON.getJSONObject("driver");
+                String driverName = driver.getString("driverName");
+
+                Class driverClass = DCDriver.getDrivers().get(driverName);
+
+                if (driverClass == null) {
+                    resp.setStatus(400);
+                    jsonObject.put("error", "Unknown Driver " + driverName);
+                    return jsonObject;
+                }
+
+                DCDriver dcDriver = DCDriver.getDrivers().get(driverName).newInstance();
+
+                DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) dcDriver;
+                JSONArray plugins = driver.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
                     DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Plugin "+object.getString("_id"));
+                        jsonObject.put("error", "Unknown Plugin " + object.getString("_id"));
                         return jsonObject;
-                    }
+                        }
                     DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId("_id"));
                         if (pluginConfig == null) {
                             resp.setStatus(400);
-                            jsonObject.put("error", "Unknown Plugin Config "+object.getString("_id")+" for plugin "+plugin.getName());
+                            jsonObject.put("error", "Unknown Plugin Config " + object.getString("_id") + " for plugin " + plugin.getName());
                             return jsonObject;
                         }
                     }
                     if (pluginConfig == null && plugin.getConfigs().size() > 0) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "There must be a config for "+plugin.getName());
+                        jsonObject.put("error", "There must be a config for " + plugin.getName());
                         return jsonObject;
                     }
-                    serverType.getPlugins().put(plugin, pluginConfig);
+                    serverTypeDriver.getPlugins().put(plugin, pluginConfig);
                 }
+                serverType.setDriver(dcDriver);
 
                 JSONArray worlds = serverTypeJSON.getJSONArray("worlds");
                 for (int i = 0; i < worlds.length(); i++) {
@@ -244,31 +273,46 @@ public class ServerTypeServlet extends APIServlet {
                 serverType.setAmount(serverTypeJSON.getInt("amount"));
                 serverType.setDisabled(serverTypeJSON.getBoolean("disabled"));
 
-                JSONArray plugins = serverTypeJSON.getJSONArray("plugins");
+                JSONObject driver = serverTypeJSON.getJSONObject("driver");
+                String driverName = driver.getString("driverName");
+
+                Class driverClass = DCDriver.getDrivers().get(driverName);
+
+                if (driverClass == null) {
+                    resp.setStatus(400);
+                    jsonObject.put("error", "Unknown Driver " + driverName);
+                    return jsonObject;
+                }
+
+                DCDriver dcDriver = DCDriver.getDrivers().get(driverName).newInstance();
+
+                DCServerTypeDriver serverTypeDriver = (DCServerTypeDriver) dcDriver;
+                JSONArray plugins = driver.getJSONArray("plugins");
                 for (int i = 0; i < plugins.length(); i++) {
                     JSONObject object = plugins.getJSONObject(i);
                     DCPlugin plugin = DoubleChest.getPluginLoader().loadEntity(new ObjectId(object.getString("_id")));
                     if (plugin == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Plugin "+object.getString("_id"));
+                        jsonObject.put("error", "Unknown Plugin " + object.getString("_id"));
                         return jsonObject;
-                    }
+                        }
                     DCPlugin.PluginConfig pluginConfig = null;
                     if (object.has("_configId")) {
                         pluginConfig = plugin.getConfigs().get(new ObjectId(object.getString("_configId")));
                         if (pluginConfig == null) {
                             resp.setStatus(400);
-                            jsonObject.put("error", "Unknown Plugin Config "+object.getString("_id")+" for plugin "+plugin.getName());
+                            jsonObject.put("error", "Unknown Plugin Config " + object.getString("_id") + " for plugin " + plugin.getName());
                             return jsonObject;
                         }
                     }
                     if (pluginConfig == null && plugin.getConfigs().size() > 0) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "There must be a config for "+plugin.getName());
+                        jsonObject.put("error", "There must be a config for " + plugin.getName());
                         return jsonObject;
                     }
-                    serverType.getPlugins().put(plugin, pluginConfig);
+                    serverTypeDriver.getPlugins().put(plugin, pluginConfig);
                 }
+                serverType.setDriver(dcDriver);
 
                 JSONArray worlds = serverTypeJSON.getJSONArray("worlds");
                 for (int i = 0; i < worlds.length(); i++) {
@@ -324,11 +368,11 @@ public class ServerTypeServlet extends APIServlet {
                     return jsonObject;
                 }
 
-                for (DCBungeeType bungeeType : DoubleChest.getBungeeTypeLoader().getTypes()) {
-                    for (DCServerType serverType1 : bungeeType.getServerTypes().keySet()) {
+                for (DCProxyType proxyType : DoubleChest.getProxyTypeLoader().getTypes()) {
+                    for (DCServerType serverType1 : proxyType.getServerTypes().keySet()) {
                         if (serverType1.get_id().equals(serverType.get_id())) {
                             resp.setStatus(406);
-                            jsonObject.put("error", "Cannot delete server type. Please remove from bungee "+bungeeType.getName());
+                            jsonObject.put("error", "Cannot delete server type. Please remove from proxy " + proxyType.getName());
                             return jsonObject;
                         }
                     }

@@ -2,9 +2,9 @@ package io.minestack.servlets;
 
 import io.minestack.DatabaseResource;
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungee;
 import io.minestack.db.entity.DCNode;
-import io.minestack.db.entity.DCServer;
+import io.minestack.db.entity.proxy.DCProxy;
+import io.minestack.db.entity.server.DCServer;
 import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.RequestDispatcher;
@@ -69,9 +69,9 @@ public class DashboardServlet extends HttpServlet {
             }
         }
 
-        ArrayList<DCBungee> bungees = DoubleChest.getBungeeLoader().getBungees();
+        ArrayList<DCProxy> proxies = DoubleChest.getProxyLoader().getProcies();
 
-        req.setAttribute("bungees", bungees);
+        req.setAttribute("proxies", proxies);
         req.setAttribute("servers", servers);
         req.setAttribute("onlinePlayers", onlinePlayers);
         req.setAttribute("maxPlayers", maxPlayers);

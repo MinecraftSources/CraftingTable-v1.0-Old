@@ -7,8 +7,8 @@ import com.github.dockerjava.core.DockerClientImpl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import io.minestack.db.DoubleChest;
-import io.minestack.db.entity.DCBungeeType;
 import io.minestack.db.entity.DCNode;
+import io.minestack.db.entity.proxy.DCProxyType;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -43,10 +43,10 @@ public class NodeServlet extends APIServlet {
                 jsonObject.put("_id", node.get_id());
                 jsonObject.put("host", node.getAddress());
                 jsonObject.put("ram", node.getRam());
-                if (node.getBungeeType() != null) {
-                    jsonObject.put("_bungeeType", node.getBungeeType().get_id().toString());
+                if (node.getProxyType() != null) {
+                    jsonObject.put("_proxyType", node.getProxyType().get_id().toString());
                 } else {
-                    jsonObject.put("_bungeeType", "");
+                    jsonObject.put("_proxyType", "");
                 }
                 jsonObject.put("lastUpdate", node.getLastUpdate());
 
@@ -90,16 +90,16 @@ public class NodeServlet extends APIServlet {
                     return jsonObject;
                 }
 
-                if (nodeJSON.getString("_bungeeType").length() > 0) {
-                    DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
-                    if (bungeeType == null) {
+                if (nodeJSON.getString("_proxyType").length() > 0) {
+                    DCProxyType proxyType = DoubleChest.getProxyTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_proxyType")));
+                    if (proxyType == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Bungee Type " + nodeJSON.getString("_bungeeType"));
+                        jsonObject.put("error", "Unknown Proxy Type " + nodeJSON.getString("_proxyType"));
                         return jsonObject;
                     }
-                    node.setBungeeType(bungeeType);
+                    node.setProxyType(proxyType);
                 } else {
-                    node.setBungeeType(null);
+                    node.setProxyType(null);
                 }
 
                 DockerClientConfig.DockerClientConfigBuilder config = DockerClientConfig.createDefaultConfigBuilder();
@@ -165,16 +165,16 @@ public class NodeServlet extends APIServlet {
                 node.setRam(nodeJSON.getInt("ram"));
                 node.setLastUpdate(0L);
 
-                if (nodeJSON.getString("_bungeeType").length() > 0) {
-                    DCBungeeType bungeeType = DoubleChest.getBungeeTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_bungeeType")));
-                    if (bungeeType == null) {
+                if (nodeJSON.getString("_proxyType").length() > 0) {
+                    DCProxyType proxyType = DoubleChest.getProxyTypeLoader().loadEntity(new ObjectId(nodeJSON.getString("_proxyType")));
+                    if (proxyType == null) {
                         resp.setStatus(400);
-                        jsonObject.put("error", "Unknown Bungee Type " + nodeJSON.getString("_bungeeType"));
+                        jsonObject.put("error", "Unknown Proxy Type " + nodeJSON.getString("_proxyType"));
                         return jsonObject;
                     }
-                    node.setBungeeType(bungeeType);
+                    node.setProxyType(proxyType);
                 } else {
-                    node.setBungeeType(null);
+                    node.setProxyType(null);
                 }
 
                 DoubleChest.getNodeLoader().saveEntity(node);
