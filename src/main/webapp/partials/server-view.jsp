@@ -11,7 +11,7 @@
         </div>
 
         <div class="form-group">
-            <label for="type">Bungee Type</label>
+            <label for="type">Server Type</label>
             <input type="text" class="form-control" id="type" ng-model="server._servertype.name" disabled>
         </div>
 

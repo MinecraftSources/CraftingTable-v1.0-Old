@@ -12,7 +12,7 @@
 
         <div class="form-group">
             <label for="type">Bungee Type</label>
-            <input type="text" class="form-control" name="type" id="type" ng-model="bungee._bungeetype.name" disabled>
+            <input type="text" class="form-control" name="type" id="type" ng-model="bungee._proxytype.name" disabled>
         </div>
 
         <div class="form-group">
